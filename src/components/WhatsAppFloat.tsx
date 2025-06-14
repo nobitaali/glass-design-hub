@@ -5,7 +5,22 @@ const WhatsAppFloat = () => {
   const [isVisible, setIsVisible] = useState(true);
   
   const phoneNumber = "6285156275565";
-  const message = "Halo! Saya tertarik dengan produk kaca film dan sandblast. Mohon informasi lebih lanjut.";
+  const message = `🏠 *KONSULTASI INTERIOR SOLUTIONS*
+
+👋 Halo! Saya tertarik dengan layanan kaca film dan sandblast dari Interior Solutions Indonesia.
+
+🔍 *Yang ingin saya ketahui:*
+• Katalog produk terlengkap
+• Harga dan promo terbaru
+• Proses konsultasi gratis
+• Jadwal survey lokasi
+• Portfolio pekerjaan sebelumnya
+
+📍 *Lokasi saya:* _[mohon isi kota/area]_
+📏 *Perkiraan luas:* _[mohon isi]_
+🏢 *Jenis bangunan:* _[rumah/kantor/toko/dll]_
+
+Mohon informasi lengkapnya. Terima kasih! 🙏`;
   
   const handleWhatsAppClick = () => {
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;

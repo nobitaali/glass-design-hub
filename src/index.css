@@ -99,5 +99,27 @@
 
   body {
     @apply bg-background text-foreground;
+    font-display: swap;
+  }
+
+  /* Performance optimizations */
+  img {
+    content-visibility: auto;
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    .container {
+      @apply px-3;
+    }
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

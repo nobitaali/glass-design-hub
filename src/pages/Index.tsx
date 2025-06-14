@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import ProductCatalog from "@/components/ProductCatalog";
 import CustomDesign from "@/components/CustomDesign";
+import GoogleMaps from "@/components/GoogleMaps";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 
@@ -12,6 +13,7 @@ const Index = () => {
       <Hero />
       <ProductCatalog />
       <CustomDesign />
+      <GoogleMaps />
       <Footer />
       <WhatsAppFloat />
     </div>

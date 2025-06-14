@@ -16,7 +16,48 @@ interface ProductCardProps {
 const ProductCard = ({ title, description, features, category, gradient, imageUrl, price }: ProductCardProps) => {
   const handleWhatsAppClick = () => {
     const phoneNumber = "6285156275565";
-    const message = `Halo! Saya tertarik dengan produk ${title}. Mohon informasi harga dan detail lebih lanjut.`;
+    const message = `🛍️ *PERMINTAAN PENAWARAN PRODUK*
+
+📦 *Produk:* ${title}
+📋 *Kategori:* ${category}
+💰 *Harga Katalog:* ${price}
+
+📝 *Kebutuhan Saya:*
+• Lokasi pemasangan: _[mohon isi]_
+• Luas area (m²): _[mohon isi]_
+• Jenis bangunan: _[rumah/kantor/toko/dll]_
+• Target waktu: _[mohon isi]_
+
+🔥 *Pertanyaan:*
+1. Apakah ada diskon untuk pembelian dalam jumlah besar?
+2. Berapa biaya pemasangan untuk lokasi saya?
+3. Berapa lama garansi produk dan pemasangan?
+4. Apakah bisa survey lokasi terlebih dahulu?
+
+Mohon kirimkan penawaran terbaik untuk kebutuhan saya. Terima kasih! 🙏`;
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
+  const handleQuoteRequest = () => {
+    const phoneNumber = "6285156275565";
+    const message = `💼 *REQUEST PENAWARAN KHUSUS*
+
+📦 *Produk:* ${title}
+💰 *Budget Range:* _[mohon isi]_
+
+📐 *Detail Project:*
+• Jenis project: _[komersial/residential]_
+• Luas total: _[mohon isi m²]_
+• Lokasi: _[kota/alamat]_
+• Timeline: _[urgent/normal/flexible]_
+
+🎯 *Kebutuhan Spesial:*
+• Custom design: _[ya/tidak]_
+• Pemasangan: _[ya/tidak]_
+• After sales service: _[ya/tidak]_
+
+Mohon penawaran terbaik untuk project ini. Siap untuk meeting/survey lokasi. Terima kasih! 🚀`;
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
@@ -60,15 +101,20 @@ const ProductCard = ({ title, description, features, category, gradient, imageUr
           ))}
         </div>
         
-        <div className="flex gap-2">
-          <Button size="sm" className="flex-1" variant="outline" asChild>
-            <a href={`/product/${title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}>
-              <Eye className="h-4 w-4 mr-1" />
-              Detail
-            </a>
-          </Button>
-          <Button size="sm" onClick={handleWhatsAppClick} className="bg-green-500 hover:bg-green-600">
-            <MessageCircle className="h-4 w-4" />
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2">
+            <Button size="sm" className="flex-1" variant="outline" asChild>
+              <a href={`/product/${title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}>
+                <Eye className="h-4 w-4 mr-1" />
+                Detail
+              </a>
+            </Button>
+            <Button size="sm" onClick={handleWhatsAppClick} className="bg-green-500 hover:bg-green-600">
+              <MessageCircle className="h-4 w-4" />
+            </Button>
+          </div>
+          <Button size="sm" onClick={handleQuoteRequest} className="w-full bg-primary hover:bg-primary/90">
+            💼 Minta Penawaran
           </Button>
         </div>
       </CardContent>
