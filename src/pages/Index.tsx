@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import ProductCatalog from "@/components/ProductCatalog";
 import CustomDesign from "@/components/CustomDesign";
 import Footer from "@/components/Footer";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 
 const Index = () => {
   return (
@@ -12,6 +13,7 @@ const Index = () => {
       <ProductCatalog />
       <CustomDesign />
       <Footer />
+      <WhatsAppFloat />
     </div>
   );
 };

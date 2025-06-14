@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, MessageCircle } from "lucide-react";
+import { Check, MessageCircle, Eye } from "lucide-react";
 
 interface ProductCardProps {
   title: string;
@@ -9,20 +9,39 @@ interface ProductCardProps {
   features: string[];
   category: string;
   gradient: string;
+  imageUrl: string;
+  price?: string;
 }
 
-const ProductCard = ({ title, description, features, category, gradient }: ProductCardProps) => {
+const ProductCard = ({ title, description, features, category, gradient, imageUrl, price }: ProductCardProps) => {
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "6285156275565";
+    const message = `Halo! Saya tertarik dengan produk ${title}. Mohon informasi harga dan detail lebih lanjut.`;
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between mb-2">
-          <Badge variant="secondary" className="text-xs">
-            {category}
-          </Badge>
-          <div className={`w-12 h-12 rounded-full ${gradient} flex items-center justify-center`}>
-            <div className="w-6 h-6 bg-white rounded-full opacity-80"></div>
+    <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+      {/* Product Image */}
+      <div className="relative h-48 overflow-hidden">
+        <img 
+          src={imageUrl} 
+          alt={title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
+          {category}
+        </Badge>
+        {price && (
+          <div className="absolute bottom-3 left-3 text-white font-bold text-lg">
+            {price}
           </div>
-        </div>
+        )}
+      </div>
+
+      <CardHeader className="pb-4">
         <CardTitle className="text-xl group-hover:text-primary transition-colors">
           {title}
         </CardTitle>
@@ -42,10 +61,11 @@ const ProductCard = ({ title, description, features, category, gradient }: Produ
         </div>
         
         <div className="flex gap-2">
-          <Button size="sm" className="flex-1">
-            Detail Produk
+          <Button size="sm" className="flex-1" variant="outline">
+            <Eye className="h-4 w-4 mr-1" />
+            Detail
           </Button>
-          <Button size="sm" variant="outline">
+          <Button size="sm" onClick={handleWhatsAppClick} className="bg-green-500 hover:bg-green-600">
             <MessageCircle className="h-4 w-4" />
           </Button>
         </div>

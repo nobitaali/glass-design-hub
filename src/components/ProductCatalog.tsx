@@ -12,7 +12,9 @@ const ProductCatalog = () => {
         "Cocok untuk partisi, pintu, dan jendela kaca"
       ],
       category: "SAND BLAST",
-      gradient: "bg-gradient-to-br from-gray-400 to-gray-600"
+      gradient: "bg-gradient-to-br from-gray-400 to-gray-600",
+      imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=500&h=300&fit=crop",
+      price: "Mulai Rp 85.000/m²"
     },
     {
       title: "Sandblast Motif",
@@ -23,7 +25,9 @@ const ProductCatalog = () => {
         "Ideal untuk kantor, showroom, dan rumah"
       ],
       category: "SAND BLAST",
-      gradient: "bg-gradient-to-br from-blue-400 to-blue-600"
+      gradient: "bg-gradient-to-br from-blue-400 to-blue-600",
+      imageUrl: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop",
+      price: "Mulai Rp 125.000/m²"
     },
     {
       title: "Sandblast Cutting",
@@ -34,7 +38,9 @@ const ProductCatalog = () => {
         "Hasil presisi dengan detail tajam"
       ],
       category: "SAND BLAST",
-      gradient: "bg-gradient-to-br from-green-400 to-green-600"
+      gradient: "bg-gradient-to-br from-green-400 to-green-600",
+      imageUrl: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=500&h=300&fit=crop",
+      price: "Mulai Rp 175.000/m²"
     },
     {
       title: "Sandblast Print",
@@ -45,7 +51,9 @@ const ProductCatalog = () => {
         "Pas untuk branding, signage, dan interior unik"
       ],
       category: "SAND BLAST",
-      gradient: "bg-gradient-to-br from-purple-400 to-purple-600"
+      gradient: "bg-gradient-to-br from-purple-400 to-purple-600",
+      imageUrl: "https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=500&h=300&fit=crop",
+      price: "Mulai Rp 225.000/m²"
     }
   ];
 
@@ -59,7 +67,9 @@ const ProductCatalog = () => {
         "Cocok untuk kendaraan, kantor, rumah"
       ],
       category: "KACA FILM",
-      gradient: "bg-gradient-to-br from-gray-800 to-black"
+      gradient: "bg-gradient-to-br from-gray-800 to-black",
+      imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=500&h=300&fit=crop&sat=-100",
+      price: "Mulai Rp 65.000/m²"
     },
     {
       title: "Kaca Film Silver",
@@ -70,7 +80,9 @@ const ProductCatalog = () => {
         "Memberikan kesan modern dan bersih"
       ],
       category: "KACA FILM",
-      gradient: "bg-gradient-to-br from-gray-300 to-gray-500"
+      gradient: "bg-gradient-to-br from-gray-300 to-gray-500",
+      imageUrl: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop&sat=-50",
+      price: "Mulai Rp 75.000/m²"
     },
     {
       title: "Kaca Film Brown",
@@ -81,7 +93,9 @@ const ProductCatalog = () => {
         "Mengurangi silau & menjaga suhu ruangan"
       ],
       category: "KACA FILM",
-      gradient: "bg-gradient-to-br from-amber-600 to-brown-700"
+      gradient: "bg-gradient-to-br from-amber-600 to-brown-700",
+      imageUrl: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=500&h=300&fit=crop&sepia=100",
+      price: "Mulai Rp 70.000/m²"
     }
   ];
 
@@ -95,7 +109,9 @@ const ProductCatalog = () => {
         "Tahan cuaca & mudah dipasang"
       ],
       category: "STIKER & VINYL",
-      gradient: "bg-gradient-to-br from-indigo-400 to-indigo-600"
+      gradient: "bg-gradient-to-br from-indigo-400 to-indigo-600",
+      imageUrl: "https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=500&h=300&fit=crop&hue=240",
+      price: "Mulai Rp 45.000/m²"
     },
     {
       title: "Stiker Tembok",
@@ -106,7 +122,9 @@ const ProductCatalog = () => {
         "Cocok untuk dekorasi rumah, café, kantor"
       ],
       category: "STIKER & VINYL",
-      gradient: "bg-gradient-to-br from-pink-400 to-pink-600"
+      gradient: "bg-gradient-to-br from-pink-400 to-pink-600",
+      imageUrl: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop&hue=320",
+      price: "Mulai Rp 25.000/m²"
     },
     {
       title: "Stiker Kaca",
@@ -117,7 +135,9 @@ const ProductCatalog = () => {
         "Tahan lama dan mudah dirawat"
       ],
       category: "STIKER & VINYL",
-      gradient: "bg-gradient-to-br from-cyan-400 to-cyan-600"
+      gradient: "bg-gradient-to-br from-cyan-400 to-cyan-600",
+      imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=500&h=300&fit=crop&hue=180",
+      price: "Mulai Rp 35.000/m²"
     },
     {
       title: "Stiker Vinyl Print",
@@ -128,18 +148,22 @@ const ProductCatalog = () => {
         "Tahan air dan sinar matahari"
       ],
       category: "STIKER & VINYL",
-      gradient: "bg-gradient-to-br from-orange-400 to-orange-600"
+      gradient: "bg-gradient-to-br from-orange-400 to-orange-600",
+      imageUrl: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=500&h=300&fit=crop&hue=30",
+      price: "Mulai Rp 55.000/m²"
     },
     {
       title: "Stiker Vinyl Cutting",
       description: "Potongan presisi sesuai desain",
       features: [
-        "Potongan sesuai desain/logo",
+        "Potongan sesuai design/logo",
         "Tampilan bersih dan profesional",
         "Cocok untuk kendaraan, kaca toko, pintu"
       ],
       category: "STIKER & VINYL",
-      gradient: "bg-gradient-to-br from-teal-400 to-teal-600"
+      gradient: "bg-gradient-to-br from-teal-400 to-teal-600",
+      imageUrl: "https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=500&h=300&fit=crop&hue=160",
+      price: "Mulai Rp 65.000/m²"
     },
     {
       title: "Stiker Reflektor",
@@ -150,7 +174,9 @@ const ProductCatalog = () => {
         "Tersedia dalam berbagai warna cerah"
       ],
       category: "STIKER & VINYL",
-      gradient: "bg-gradient-to-br from-yellow-400 to-yellow-600"
+      gradient: "bg-gradient-to-br from-yellow-400 to-yellow-600",
+      imageUrl: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=500&h=300&fit=crop&hue=60",
+      price: "Mulai Rp 85.000/m²"
     }
   ];
 
