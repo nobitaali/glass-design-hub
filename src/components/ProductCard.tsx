@@ -61,9 +61,11 @@ const ProductCard = ({ title, description, features, category, gradient, imageUr
         </div>
         
         <div className="flex gap-2">
-          <Button size="sm" className="flex-1" variant="outline">
-            <Eye className="h-4 w-4 mr-1" />
-            Detail
+          <Button size="sm" className="flex-1" variant="outline" asChild>
+            <a href={`/product/${title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}>
+              <Eye className="h-4 w-4 mr-1" />
+              Detail
+            </a>
           </Button>
           <Button size="sm" onClick={handleWhatsAppClick} className="bg-green-500 hover:bg-green-600">
             <MessageCircle className="h-4 w-4" />

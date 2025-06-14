@@ -29,6 +29,15 @@ const Header = () => {
               <h1 className="text-2xl font-bold">Interior Film Solutions</h1>
               <p className="text-sm opacity-90">Spesialis Kaca Film, Sandblast & Stiker Dekoratif</p>
             </div>
+            
+            {/* Navigation */}
+            <nav className="hidden md:flex space-x-6">
+              <a href="/" className="hover:text-primary-foreground/80 transition-colors">Beranda</a>
+              <a href="#produk" className="hover:text-primary-foreground/80 transition-colors">Produk</a>
+              <a href="/testimonials" className="hover:text-primary-foreground/80 transition-colors">Testimoni</a>
+              <a href="#layanan" className="hover:text-primary-foreground/80 transition-colors">Layanan</a>
+            </nav>
+            
             <div className="text-right">
               <p className="text-sm font-medium">Konsultasi Gratis</p>
               <p className="text-lg font-bold">24/7 Available</p>

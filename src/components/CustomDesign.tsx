@@ -35,6 +35,7 @@ const CustomDesign = () => {
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             Kami menerima pemesanan desain khusus, potong sesuai ukuran, hingga pemasangan di lokasi. 
+            <strong className="text-primary">Pengiriman ke seluruh Indonesia dengan garansi kualitas terbaik.</strong>
             Wujudkan visi interior impian Anda bersama tim profesional kami.
           </p>
         </div>
