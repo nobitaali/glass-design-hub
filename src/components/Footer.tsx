@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube, Linkedin } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -13,15 +13,42 @@ const Footer = () => {
               Memberikan solusi interior terbaik untuk rumah, kantor, dan kendaraan.
             </p>
             <div className="flex space-x-3">
-              <div className="w-8 h-8 bg-primary-foreground/20 rounded-full flex items-center justify-center">
+              <a 
+                href="https://www.facebook.com/interiorsolutions.id" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-primary-foreground/20 rounded-full flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+                aria-label="Facebook Interior Solutions Indonesia"
+              >
                 <Facebook className="h-4 w-4" />
-              </div>
-              <div className="w-8 h-8 bg-primary-foreground/20 rounded-full flex items-center justify-center">
+              </a>
+              <a 
+                href="https://www.instagram.com/interiorsolutions.id" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-primary-foreground/20 rounded-full flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+                aria-label="Instagram Interior Solutions Indonesia"
+              >
                 <Instagram className="h-4 w-4" />
-              </div>
-              <div className="w-8 h-8 bg-primary-foreground/20 rounded-full flex items-center justify-center">
+              </a>
+              <a 
+                href="https://www.youtube.com/c/InteriorSolutionsIndonesia" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-primary-foreground/20 rounded-full flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+                aria-label="YouTube Interior Solutions Indonesia"
+              >
                 <Youtube className="h-4 w-4" />
-              </div>
+              </a>
+              <a 
+                href="https://www.linkedin.com/company/interior-solutions-indonesia" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-primary-foreground/20 rounded-full flex items-center justify-center hover:bg-primary-foreground/30 transition-colors"
+                aria-label="LinkedIn Interior Solutions Indonesia"
+              >
+                <Linkedin className="h-4 w-4" />
+              </a>
             </div>
           </div>
 
@@ -44,10 +71,10 @@ const Footer = () => {
             <ul className="space-y-2 text-sm opacity-90">
               <li>• Konsultasi Gratis</li>
               <li>• Desain Custom</li>
-              <li>• Pemasangan Profesional</li>
-              <li>• Garansi Resmi</li>
-              <li>• After Sales Service</li>
-              <li>• Maintenance & Perawatan</li>
+              <li>• Pemasangan Profesional Seluruh Indonesia</li>
+              <li>• Garansi Resmi & Extended Warranty</li>
+              <li>• After Sales Service 24/7</li>
+              <li>• Maintenance & Perawatan Berkala</li>
             </ul>
           </div>
 

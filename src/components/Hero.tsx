@@ -8,12 +8,13 @@ const Hero = () => {
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           <div>
             <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
-              Transformasi Interior dengan
-              <span className="text-primary block">Kaca Film Premium</span>
+              Kaca Film & Sandblast Terbaik Jakarta
             </h1>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               Spesialis kaca film, sandblast, dan stiker dekoratif untuk rumah, kantor, dan kendaraan. 
-              Dengan pengalaman bertahun-tahun dan teknologi terdepan.
+              Pemasangan profesional ke seluruh Indonesia dengan garansi resmi. Konsultasi gratis, 
+              survey lokasi, dan after sales service terbaik. Teknologi terdepan dengan harga terjangkau 
+              untuk solusi interior dan dekorasi yang berkualitas tinggi.
             </p>
             
             <div className="flex flex-wrap gap-4 mb-8">

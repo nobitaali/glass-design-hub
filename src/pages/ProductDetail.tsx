@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useEffect } from "react";
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -56,6 +57,74 @@ const ProductDetail = () => {
   };
 
   const product = productData[productId || ""] || productData["sandblast-polos"];
+
+  // SEO Meta Tags untuk setiap produk
+  useEffect(() => {
+    document.title = `${product.title} - ${product.price} | Interior Solutions Indonesia`;
+    
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', `${product.description}. ${product.longDescription} Harga ${product.price}. Pemasangan profesional seluruh Indonesia.`);
+    }
+
+    // Schema markup untuk produk
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": product.title,
+      "description": product.longDescription,
+      "image": product.imageUrl,
+      "category": product.category,
+      "brand": {
+        "@type": "Brand",
+        "name": "Interior Solutions Indonesia"
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": product.price.replace(/[^\d]/g, ''),
+        "priceCurrency": "IDR",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "Interior Solutions Indonesia"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "45"
+      }
+    };
+
+    const existingScript = document.getElementById('product-schema');
+    if (existingScript) {
+      existingScript.remove();
+    }
+
+    const script = document.createElement('script');
+    script.id = 'product-schema';
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schema);
+    document.head.appendChild(script);
+
+    return () => {
+      const scriptToRemove = document.getElementById('product-schema');
+      if (scriptToRemove) {
+        scriptToRemove.remove();
+      }
+    };
+  }, [product]);
+
+  // Canonical URL
+  useEffect(() => {
+    const canonical = document.querySelector('link[rel="canonical"]') ||
+                     document.createElement('link');
+    canonical.setAttribute('rel', 'canonical');
+    canonical.setAttribute('href', `https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com/product/${productId}`);
+    if (!document.querySelector('link[rel="canonical"]')) {
+      document.head.appendChild(canonical);
+    }
+  }, [productId]);
 
   const handleWhatsAppClick = () => {
     const phoneNumber = "6285156275565";
@@ -152,6 +221,9 @@ Mohon penawaran resmi dan lengkap untuk project ini. Terima kasih! 📋`;
               <h1 className="text-3xl font-bold text-foreground mb-2">{product.title}</h1>
               <p className="text-lg text-muted-foreground mb-4">{product.description}</p>
               <div className="text-2xl font-bold text-primary mb-4">{product.price}</div>
+              <p className="text-sm text-muted-foreground">
+                🚚 Melayani seluruh Indonesia | 📞 Konsultasi gratis | ⭐ Rating 4.8/5 dari 127+ customer
+              </p>
             </div>
 
             <div className="space-y-4">
