@@ -1,7 +1,10 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Check, MessageCircle, Eye } from "lucide-react";
+import Link from "next/link";
 
 interface ProductCardProps {
   title: string;
@@ -62,6 +65,8 @@ Mohon penawaran terbaik untuk project ini. Siap untuk meeting/survey lokasi. Ter
     window.open(whatsappUrl, "_blank");
   };
 
+  const productSlug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
       {/* Product Image */}
@@ -104,10 +109,10 @@ Mohon penawaran terbaik untuk project ini. Siap untuk meeting/survey lokasi. Ter
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
             <Button size="sm" className="flex-1" variant="outline" asChild>
-              <a href={`/product/${title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}`}>
+              <Link href={`/product/${productSlug}`}>
                 <Eye className="h-4 w-4 mr-1" />
                 Detail
-              </a>
+              </Link>
             </Button>
             <Button size="sm" onClick={handleWhatsAppClick} className="bg-green-500 hover:bg-green-600">
               <MessageCircle className="h-4 w-4" />

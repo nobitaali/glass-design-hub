@@ -2,8 +2,18 @@ import { Star, Building2, Car, Home, Quote } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Metadata } from "next";
 
-const Testimonials = () => {
+export const metadata: Metadata = {
+  title: "Testimoni Klien - Interior Solutions Indonesia",
+  description: "Kepercayaan dari 500+ perusahaan besar Indonesia. Lihat testimoni klien kami yang telah menggunakan layanan kaca film, sandblast, dan stiker dekoratif.",
+  openGraph: {
+    title: "Testimoni Klien - Interior Solutions Indonesia",
+    description: "Kepercayaan dari 500+ perusahaan besar Indonesia. Lihat testimoni klien kami yang telah menggunakan layanan kaca film, sandblast, dan stiker dekoratif.",
+  },
+};
+
+export default function Testimonials() {
   const testimonials = [
     {
       company: "PT Indofood Sukses Makmur",
@@ -136,7 +146,7 @@ const Testimonials = () => {
                   </div>
                   
                   <blockquote className="text-sm text-muted-foreground italic mb-4 leading-relaxed">
-                    "{item.testimonial}"
+                    &quot;{item.testimonial}&quot;
                   </blockquote>
                   
                   <div className="flex items-center justify-between">
@@ -185,6 +195,4 @@ const Testimonials = () => {
       <Footer />
     </div>
   );
-};
-
-export default Testimonials;
+}

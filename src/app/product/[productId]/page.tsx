@@ -1,130 +1,90 @@
-import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, MessageCircle, Check, Star, Shield, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useEffect } from "react";
+import Link from "next/link";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-const ProductDetail = () => {
-  const { productId } = useParams();
-  
-  const productData: { [key: string]: any } = {
-    "sandblast-polos": {
-      title: "Sandblast Polos",
-      description: "Tampilan elegan & minimalis untuk privasi maksimal",
-      longDescription: "Sandblast polos memberikan solusi privasi yang elegan tanpa mengurangi pencahayaan alami. Cocok untuk berbagai aplikasi interior dan eksterior dengan hasil finishing yang halus dan profesional.",
-      features: [
-        "Tampilan elegan & minimalis",
-        "Memberi privasi tanpa menghalangi cahaya",
-        "Cocok untuk partisi, pintu, dan jendela kaca",
-        "Tahan lama dan mudah perawatan",
-        "Hasil finishing halus dan merata"
-      ],
-      category: "SAND BLAST",
-      imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop",
-      price: "Mulai Rp 85.000/m²",
-      specifications: {
-        "Ketebalan": "0.5-1mm",
-        "Transparansi": "30-50%",
-        "Aplikasi": "Interior & Eksterior",
-        "Garansi": "2 Tahun"
-      }
-    },
-    "kaca-film-black": {
-      title: "Kaca Film Black",
-      description: "Privasi maksimal dengan reduksi panas optimal",
-      longDescription: "Kaca film hitam premium dengan teknologi canggih untuk memberikan privasi maksimal sekaligus mengurangi panas dan sinar UV berbahaya. Ideal untuk kendaraan, gedung perkantoran, dan rumah tinggal.",
-      features: [
-        "Privasi maksimal dari luar",
-        "Reduksi panas dan sinar UV hingga 99%",
-        "Cocok untuk kendaraan, kantor, rumah",
-        "Anti gores dan tahan lama",
-        "Pemasangan mudah tanpa gelembung"
-      ],
-      category: "KACA FILM",
-      imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop&sat=-100",
-      price: "Mulai Rp 65.000/m²",
-      specifications: {
-        "VLT": "5-20%",
-        "UV Rejection": "99%",
-        "Heat Rejection": "60-80%",
-        "Garansi": "5 Tahun"
-      }
-    }
-    // Add more products as needed
+interface ProductDetailProps {
+  params: {
+    productId: string;
   };
+}
 
-  const product = productData[productId || ""] || productData["sandblast-polos"];
-
-  // SEO Meta Tags untuk setiap produk
-  useEffect(() => {
-    document.title = `${product.title} - ${product.price} | Interior Solutions Indonesia`;
-    
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', `${product.description}. ${product.longDescription} Harga ${product.price}. Pemasangan profesional seluruh Indonesia.`);
+const productData: { [key: string]: any } = {
+  "sandblast-polos": {
+    title: "Sandblast Polos",
+    description: "Tampilan elegan & minimalis untuk privasi maksimal",
+    longDescription: "Sandblast polos memberikan solusi privasi yang elegan tanpa mengurangi pencahayaan alami. Cocok untuk berbagai aplikasi interior dan eksterior dengan hasil finishing yang halus dan profesional.",
+    features: [
+      "Tampilan elegan & minimalis",
+      "Memberi privasi tanpa menghalangi cahaya",
+      "Cocok untuk partisi, pintu, dan jendela kaca",
+      "Tahan lama dan mudah perawatan",
+      "Hasil finishing halus dan merata"
+    ],
+    category: "SAND BLAST",
+    imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop",
+    price: "Mulai Rp 85.000/m²",
+    specifications: {
+      "Ketebalan": "0.5-1mm",
+      "Transparansi": "30-50%",
+      "Aplikasi": "Interior & Eksterior",
+      "Garansi": "2 Tahun"
     }
+  },
+  "kaca-film-black": {
+    title: "Kaca Film Black",
+    description: "Privasi maksimal dengan reduksi panas optimal",
+    longDescription: "Kaca film hitam premium dengan teknologi canggih untuk memberikan privasi maksimal sekaligus mengurangi panas dan sinar UV berbahaya. Ideal untuk kendaraan, gedung perkantoran, dan rumah tinggal.",
+    features: [
+      "Privasi maksimal dari luar",
+      "Reduksi panas dan sinar UV hingga 99%",
+      "Cocok untuk kendaraan, kantor, rumah",
+      "Anti gores dan tahan lama",
+      "Pemasangan mudah tanpa gelembung"
+    ],
+    category: "KACA FILM",
+    imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop&sat=-100",
+    price: "Mulai Rp 65.000/m²",
+    specifications: {
+      "VLT": "5-20%",
+      "UV Rejection": "99%",
+      "Heat Rejection": "60-80%",
+      "Garansi": "5 Tahun"
+    }
+  }
+};
 
-    // Schema markup untuk produk
-    const schema = {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      "name": product.title,
-      "description": product.longDescription,
-      "image": product.imageUrl,
-      "category": product.category,
-      "brand": {
-        "@type": "Brand",
-        "name": "Interior Solutions Indonesia"
-      },
-      "offers": {
-        "@type": "Offer",
-        "price": product.price.replace(/[^\d]/g, ''),
-        "priceCurrency": "IDR",
-        "availability": "https://schema.org/InStock",
-        "seller": {
-          "@type": "Organization",
-          "name": "Interior Solutions Indonesia"
-        }
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "45"
-      }
+export async function generateMetadata({ params }: ProductDetailProps): Promise<Metadata> {
+  const product = productData[params.productId];
+  
+  if (!product) {
+    return {
+      title: "Produk Tidak Ditemukan - Interior Solutions Indonesia",
     };
+  }
 
-    const existingScript = document.getElementById('product-schema');
-    if (existingScript) {
-      existingScript.remove();
-    }
+  return {
+    title: `${product.title} - ${product.price} | Interior Solutions Indonesia`,
+    description: `${product.description}. ${product.longDescription} Harga ${product.price}. Pemasangan profesional seluruh Indonesia.`,
+    openGraph: {
+      title: `${product.title} - Interior Solutions Indonesia`,
+      description: product.longDescription,
+      images: [product.imageUrl],
+    },
+  };
+}
 
-    const script = document.createElement('script');
-    script.id = 'product-schema';
-    script.type = 'application/ld+json';
-    script.text = JSON.stringify(schema);
-    document.head.appendChild(script);
+export default function ProductDetail({ params }: ProductDetailProps) {
+  const product = productData[params.productId];
 
-    return () => {
-      const scriptToRemove = document.getElementById('product-schema');
-      if (scriptToRemove) {
-        scriptToRemove.remove();
-      }
-    };
-  }, [product]);
-
-  // Canonical URL
-  useEffect(() => {
-    const canonical = document.querySelector('link[rel="canonical"]') ||
-                     document.createElement('link');
-    canonical.setAttribute('rel', 'canonical');
-    canonical.setAttribute('href', `https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com/product/${productId}`);
-    if (!document.querySelector('link[rel="canonical"]')) {
-      document.head.appendChild(canonical);
-    }
-  }, [productId]);
+  if (!product) {
+    notFound();
+  }
 
   const handleWhatsAppClick = () => {
     const phoneNumber = "6285156275565";
@@ -135,7 +95,7 @@ const ProductDetail = () => {
 💰 *Harga Mulai:* ${product.price}
 
 🎯 *Keunggulan yang menarik:*
-${product.features.map(feature => `• ${feature}`).join('\n')}
+${product.features.map((feature: string) => `• ${feature}`).join('\n')}
 
 📝 *Informasi yang saya butuhkan:*
 • Penjelasan detail produk
@@ -197,7 +157,7 @@ Mohon penawaran resmi dan lengkap untuk project ini. Terima kasih! 📋`;
       
       <div className="container mx-auto px-4 py-8">
         {/* Back Button */}
-        <Link to="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-6">
+        <Link href="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Kembali ke Katalog
         </Link>
@@ -302,6 +262,4 @@ Mohon penawaran resmi dan lengkap untuk project ini. Terima kasih! 📋`;
       <Footer />
     </div>
   );
-};
-
-export default ProductDetail;
+}

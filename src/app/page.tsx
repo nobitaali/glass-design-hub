@@ -6,7 +6,7 @@ import GoogleMaps from "@/components/GoogleMaps";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 
-const Index = () => {
+export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -18,6 +18,4 @@ const Index = () => {
       <WhatsAppFloat />
     </div>
   );
-};
-
-export default Index;
+}
