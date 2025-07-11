@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://jayasticker.netlify.app/sitemap.xml
+Sitemap: https://www.jayasticker.id/sitemap.xml
 
 # Important pages
 Allow: /testimonials

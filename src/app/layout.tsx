@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Kaca Film, Sandblast & Stiker Dekoratif Terbaik Jakarta | Interior Solutions Indonesia",
     description: "✅ Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan. Pemasangan profesional ke seluruh Indonesia. Harga terjangkau, kualitas terbaik!",
     type: "website",
-    url: "https://jayasticker.netlify.app/",
+    url: "https://www.jayasticker.id/",
     images: [
       {
         url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&h=630&fit=crop",
@@ -54,7 +54,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
-        <link rel="canonical" href="https:ja.lovableproject.com" />
+        <link rel="canonical" href="https://www.jayasticker.id" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
@@ -69,7 +69,7 @@ export default function RootLayout({
               "@type": "LocalBusiness",
               "name": "Interior Solutions Indonesia",
               "description": "Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan",
-              "url": "https://jayasticker.netlify.app/",
+              "url": "https://www.jayasticker.id/",
               "telephone": "+62851-5627-5565",
               "email": "jayastiker25@gmail.com",
               "address": {
