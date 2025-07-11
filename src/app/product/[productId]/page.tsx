@@ -7,6 +7,8 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { normalizeSlug } from "@/lib/utils";
+import { ProductDetailActions } from "@/components/ProductDetailActions";
 
 interface ProductDetailProps {
   params: {
@@ -36,6 +38,69 @@ const productData: { [key: string]: any } = {
       "Garansi": "2 Tahun"
     }
   },
+  "sandblast-motif": {
+    title: "Sandblast Motif",
+    description: "Motif artistik pilihan untuk nilai estetika tinggi",
+    longDescription: "Sandblast motif menggabungkan fungsi privasi dengan keindahan artistik. Berbagai pilihan motif tersedia untuk memberikan sentuhan dekoratif yang elegan pada kaca Anda, cocok untuk kantor, showroom, dan rumah modern.",
+    features: [
+      "Motif artistik pilihan",
+      "Menambah nilai estetika ruang",
+      "Ideal untuk kantor, showroom, dan rumah",
+      "Berbagai pilihan desain tersedia",
+      "Kombinasi fungsi dan keindahan"
+    ],
+    category: "SAND BLAST",
+    imageUrl: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=800&h=600&fit=crop",
+    price: "Mulai Rp 125.000/m²",
+    specifications: {
+      "Ketebalan": "0.5-1mm",
+      "Transparansi": "40-60%",
+      "Aplikasi": "Interior & Eksterior",
+      "Garansi": "2 Tahun"
+    }
+  },
+  "sandblast-cutting": {
+    title: "Sandblast Cutting",
+    description: "Motif custom sesuai desain dengan presisi tinggi",
+    longDescription: "Sandblast cutting menggunakan teknologi pemotongan presisi untuk menciptakan motif custom sesuai desain Anda. Ideal untuk logo perusahaan, tulisan, dan dekorasi khusus dengan hasil yang tajam dan profesional.",
+    features: [
+      "Motif custom sesuai desain",
+      "Cocok untuk logo, tulisan, dan dekorasi",
+      "Hasil presisi dengan detail tajam",
+      "Teknologi cutting modern",
+      "Personalisasi sesuai kebutuhan"
+    ],
+    category: "SAND BLAST",
+    imageUrl: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=800&h=600&fit=crop",
+    price: "Mulai Rp 175.000/m²",
+    specifications: {
+      "Ketebalan": "0.5-1mm",
+      "Transparansi": "Custom",
+      "Aplikasi": "Interior & Eksterior",
+      "Garansi": "2 Tahun"
+    }
+  },
+  "sandblast-print": {
+    title: "Sandblast Print",
+    description: "Teknologi printing untuk efek visual menarik",
+    longDescription: "Sandblast print menggabungkan teknik sandblast tradisional dengan teknologi printing modern untuk menciptakan efek visual yang unik dan menarik. Sempurna untuk branding, signage, dan interior yang membutuhkan tampilan eksklusif.",
+    features: [
+      "Sandblast + teknologi printing",
+      "Efek visual menarik dan eksklusif",
+      "Pas untuk branding, signage, dan interior unik",
+      "Kombinasi teknik tradisional dan modern",
+      "Hasil berkualitas tinggi"
+    ],
+    category: "SAND BLAST",
+    imageUrl: "https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=800&h=600&fit=crop",
+    price: "Mulai Rp 225.000/m²",
+    specifications: {
+      "Ketebalan": "0.5-1mm",
+      "Transparansi": "Custom",
+      "Aplikasi": "Interior & Eksterior",
+      "Garansi": "2 Tahun"
+    }
+  },
   "kaca-film-black": {
     title: "Kaca Film Black",
     description: "Privasi maksimal dengan reduksi panas optimal",
@@ -55,6 +120,174 @@ const productData: { [key: string]: any } = {
       "UV Rejection": "99%",
       "Heat Rejection": "60-80%",
       "Garansi": "5 Tahun"
+    }
+  },
+  "kaca-film-silver": {
+    title: "Kaca Film Silver",
+    description: "Efek reflektif elegan dengan teknologi canggih",
+    longDescription: "Kaca film silver memberikan efek reflektif yang elegan sambil menolak panas hingga 80%. Teknologi canggih yang digunakan memberikan kesan modern dan bersih, cocok untuk bangunan komersial dan residensial.",
+    features: [
+      "Efek reflektif elegan",
+      "Menolak panas hingga 80%",
+      "Memberikan kesan modern dan bersih",
+      "Teknologi canggih",
+      "Cocok untuk berbagai aplikasi"
+    ],
+    category: "KACA FILM",
+    imageUrl: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=800&h=600&fit=crop&sat=-50",
+    price: "Mulai Rp 75.000/m²",
+    specifications: {
+      "VLT": "15-35%",
+      "UV Rejection": "99%",
+      "Heat Rejection": "70-80%",
+      "Garansi": "5 Tahun"
+    }
+  },
+  "kaca-film-brown": {
+    title: "Kaca Film Brown",
+    description: "Nuansa hangat & nyaman untuk ruangan",
+    longDescription: "Kaca film brown memberikan nuansa hangat dan nyaman untuk ruangan Anda. Cocok untuk rumah dan tempat usaha yang ingin menciptakan atmosfer yang lebih personal sambil mengurangi silau dan menjaga suhu ruangan.",
+    features: [
+      "Nuansa hangat & nyaman",
+      "Cocok untuk rumah & tempat usaha",
+      "Mengurangi silau & menjaga suhu ruangan",
+      "Atmosfer personal",
+      "Kualitas premium"
+    ],
+    category: "KACA FILM",
+    imageUrl: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=800&h=600&fit=crop&sepia=100",
+    price: "Mulai Rp 70.000/m²",
+    specifications: {
+      "VLT": "20-40%",
+      "UV Rejection": "99%",
+      "Heat Rejection": "60-70%",
+      "Garansi": "5 Tahun"
+    }
+  },
+  "stiker-oneway": {
+    title: "Stiker Oneway",
+    description: "One Way Vision untuk branding dan privasi",
+    longDescription: "Stiker oneway menggunakan teknologi One Way Vision yang memungkinkan tampilan dari luar tertutup namun dari dalam tetap terlihat. Ideal untuk branding kendaraan dan kaca toko dengan daya tahan cuaca yang excellent.",
+    features: [
+      "Tampilan dari luar tertutup, dari dalam tetap terlihat",
+      "Ideal untuk branding kendaraan & kaca toko",
+      "Tahan cuaca & mudah dipasang",
+      "Teknologi One Way Vision",
+      "Kualitas premium"
+    ],
+    category: "STIKER & VINYL",
+    imageUrl: "https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=800&h=600&fit=crop&hue=240",
+    price: "Mulai Rp 45.000/m²",
+    specifications: {
+      "Material": "Vinyl Premium",
+      "Ketahanan": "5-7 Tahun",
+      "Aplikasi": "Outdoor & Indoor",
+      "Garansi": "2 Tahun"
+    }
+  },
+  "stiker-tembok": {
+    title: "Stiker Tembok",
+    description: "Wall sticker untuk dekorasi dinding",
+    longDescription: "Stiker tembok atau wall sticker memberikan solusi dekorasi dinding yang mudah dan fleksibel. Mudah dipasang dan dilepas tanpa merusak cat dinding, cocok untuk dekorasi rumah, café, dan kantor.",
+    features: [
+      "Mudah dipasang & dilepas",
+      "Tidak merusak cat dinding",
+      "Cocok untuk dekorasi rumah, café, kantor",
+      "Berbagai pilihan desain",
+      "Ramah lingkungan"
+    ],
+    category: "STIKER & VINYL",
+    imageUrl: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=800&h=600&fit=crop&hue=320",
+    price: "Mulai Rp 25.000/m²",
+    specifications: {
+      "Material": "Vinyl Removable",
+      "Ketahanan": "3-5 Tahun",
+      "Aplikasi": "Indoor",
+      "Garansi": "1 Tahun"
+    }
+  },
+  "stiker-kaca": {
+    title: "Stiker Kaca",
+    description: "Dekorasi kaca jendela dan pintu",
+    longDescription: "Stiker kaca memberikan sentuhan dekoratif pada kaca jendela dan pintu Anda. Dengan banyak pilihan warna dan motif, stiker ini tahan lama dan mudah dirawat untuk berbagai kebutuhan dekorasi.",
+    features: [
+      "Menambah dekorasi pada kaca jendela/pintu",
+      "Banyak pilihan warna & motif",
+      "Tahan lama dan mudah dirawat",
+      "Pemasangan profesional",
+      "Hasil rapi dan berkualitas"
+    ],
+    category: "STIKER & VINYL",
+    imageUrl: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&h=600&fit=crop&hue=180",
+    price: "Mulai Rp 35.000/m²",
+    specifications: {
+      "Material": "Vinyl Glass",
+      "Ketahanan": "5-7 Tahun",
+      "Aplikasi": "Indoor & Outdoor",
+      "Garansi": "2 Tahun"
+    }
+  },
+  "stiker-vinyl-print": {
+    title: "Stiker Vinyl Print",
+    description: "Cetakan full color berkualitas tinggi",
+    longDescription: "Stiker vinyl print menggunakan teknologi cetak full color berkualitas tinggi untuk menghasilkan gambar yang tajam dan warna yang vibrant. Cocok untuk promosi, branding, dan display dengan ketahanan terhadap air dan sinar matahari.",
+    features: [
+      "Cetakan full color berkualitas tinggi",
+      "Cocok untuk promosi, branding, & display",
+      "Tahan air dan sinar matahari",
+      "Warna vibrant dan tajam",
+      "Teknologi printing modern"
+    ],
+    category: "STIKER & VINYL",
+    imageUrl: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=800&h=600&fit=crop&hue=30",
+    price: "Mulai Rp 55.000/m²",
+    specifications: {
+      "Material": "Vinyl Print Premium",
+      "Ketahanan": "5-7 Tahun",
+      "Aplikasi": "Outdoor & Indoor",
+      "Garansi": "3 Tahun"
+    }
+  },
+  "stiker-vinyl-cutting": {
+    title: "Stiker Vinyl Cutting",
+    description: "Potongan presisi sesuai desain",
+    longDescription: "Stiker vinyl cutting menggunakan teknologi pemotongan presisi untuk menghasilkan bentuk sesuai design atau logo Anda. Tampilan bersih dan profesional membuatnya cocok untuk kendaraan, kaca toko, dan pintu.",
+    features: [
+      "Potongan sesuai design/logo",
+      "Tampilan bersih dan profesional",
+      "Cocok untuk kendaraan, kaca toko, pintu",
+      "Teknologi cutting presisi",
+      "Custom sesuai kebutuhan"
+    ],
+    category: "STIKER & VINYL",
+    imageUrl: "https://images.unsplash.com/photo-1483058712412-4245e9b90334?w=800&h=600&fit=crop&hue=160",
+    price: "Mulai Rp 65.000/m²",
+    specifications: {
+      "Material": "Vinyl Cutting Premium",
+      "Ketahanan": "5-7 Tahun",
+      "Aplikasi": "Outdoor & Indoor",
+      "Garansi": "3 Tahun"
+    }
+  },
+  "stiker-reflektor": {
+    title: "Stiker Reflektor",
+    description: "Keselamatan dengan teknologi reflektif",
+    longDescription: "Stiker reflektor menggunakan teknologi reflektif yang memantulkan cahaya di malam hari untuk keselamatan. Cocok untuk rambu-rambu, branding kendaraan, dan aplikasi keselamatan lainnya dengan berbagai pilihan warna cerah.",
+    features: [
+      "Memantulkan cahaya di malam hari",
+      "Cocok untuk keselamatan, rambu, dan branding kendaraan",
+      "Tersedia dalam berbagai warna cerah",
+      "Teknologi reflektif canggih",
+      "Standar keselamatan internasional"
+    ],
+    category: "STIKER & VINYL",
+    imageUrl: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=800&h=600&fit=crop&hue=60",
+    price: "Mulai Rp 85.000/m²",
+    specifications: {
+      "Material": "Vinyl Reflective",
+      "Ketahanan": "7-10 Tahun",
+      "Aplikasi": "Outdoor & Indoor",
+      "Garansi": "3 Tahun"
     }
   }
 };
@@ -80,76 +313,27 @@ export async function generateMetadata({ params }: ProductDetailProps): Promise<
 }
 
 export default function ProductDetail({ params }: ProductDetailProps) {
-  const product = productData[params.productId];
+  console.log(`ProductDetail: Received product ID: "${params.productId}"`);
+  
+  // Log all product titles and their normalized slugs for debugging
+  const productSlugs = Object.entries(productData).map(([key, value]) => ({
+    title: value.title,
+    normalizedSlug: normalizeSlug(value.title)
+  }));
+  console.log('ProductDetail: Product Slugs:', JSON.stringify(productSlugs, null, 2));
+
+  // Find the product by matching the normalized slug
+  const product = Object.values(productData).find(
+    (prod) => normalizeSlug(prod.title) === params.productId
+  );
 
   if (!product) {
+    console.error(`ProductDetail: No product found for ID "${params.productId}"`);
+    console.error(`ProductDetail: Attempted to match against: ${productSlugs.map(p => p.normalizedSlug).join(', ')}`);
     notFound();
   }
 
-  const handleWhatsAppClick = () => {
-    const phoneNumber = "6285156275565";
-    const message = `📱 *KONSULTASI PRODUK DETAIL*
-
-📦 *Produk:* ${product.title}
-📋 *Kategori:* ${product.category}
-💰 *Harga Mulai:* ${product.price}
-
-🎯 *Keunggulan yang menarik:*
-${product.features.map((feature: string) => `• ${feature}`).join('\n')}
-
-📝 *Informasi yang saya butuhkan:*
-• Penjelasan detail produk
-• Contoh hasil pemasangan
-• Proses kerja dan timeline
-• Biaya pemasangan untuk lokasi saya
-• Promo atau diskon yang tersedia
-• Garansi dan after sales service
-
-📍 *Detail Project Saya:*
-• Lokasi: _[mohon isi]_
-• Luas area: _[mohon isi m²]_
-• Jenis bangunan: _[rumah/kantor/toko]_
-• Budget range: _[mohon isi]_
-• Target selesai: _[mohon isi]_
-
-Mohon konsultasi lengkap untuk produk ini. Siap untuk survey/meeting. Terima kasih! 🙏`;
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
-  };
-
-  const handleQuoteRequest = () => {
-    const phoneNumber = "6285156275565";
-    const message = `💼 *REQUEST PENAWARAN RESMI*
-
-📦 *Produk:* ${product.title}
-📊 *Spesifikasi Teknis:*
-${Object.entries(product.specifications).map(([key, value]) => `• ${key}: ${value}`).join('\n')}
-
-📐 *Detail Project:*
-• Lokasi pemasangan: _[mohon isi lengkap]_
-• Luas total area (m²): _[mohon isi]_
-• Jumlah panel/bagian: _[mohon isi]_
-• Jenis aplikasi: _[mobil/gedung/rumah/dll]_
-• Deadline project: _[mohon isi]_
-
-💰 *Request Penawaran:*
-• Harga material per m²
-• Biaya pemasangan
-• Biaya survey lokasi
-• Total estimasi project
-• Metode pembayaran
-• Garansi yang diberikan
-
-🚀 *Permintaan Khusus:*
-• Bisa kirim sample produk?
-• Jadwal survey yang tersedia?
-• Portfolio project serupa?
-• Referensi customer sebelumnya?
-
-Mohon penawaran resmi dan lengkap untuk project ini. Terima kasih! 📋`;
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
-  };
+  // Removed client-side event handlers
 
   return (
     <div className="min-h-screen bg-background">
@@ -196,15 +380,12 @@ Mohon penawaran resmi dan lengkap untuk project ini. Terima kasih! 📋`;
               ))}
             </div>
 
-            <div className="flex flex-col gap-3">
-              <Button onClick={handleWhatsAppClick} className="bg-green-500 hover:bg-green-600 w-full">
-                <MessageCircle className="h-4 w-4 mr-2" />
-                💬 Konsultasi Gratis
-              </Button>
-              <Button onClick={handleQuoteRequest} variant="outline" className="w-full">
-                💼 Minta Penawaran Resmi
-              </Button>
-            </div>
+            <ProductDetailActions
+              title={product.title}
+              category={product.category}
+              price={product.price}
+              specifications={product.specifications}
+            />
 
             {/* Service Features */}
             <div className="grid grid-cols-3 gap-4 pt-6 border-t">

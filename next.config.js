@@ -13,6 +13,7 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ['lucide-react'],
+    transpilePackages: ['next-themes'],
   },
 }
 
