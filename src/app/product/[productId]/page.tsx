@@ -29,14 +29,20 @@ export async function generateMetadata({ params }: ProductDetailProps): Promise<
       title: "Produk Tidak Ditemukan – Interior Solutions Indonesia",
     };
 
+  const canonicalUrl = `https://www.jayasticker.id/product/${productSlug}`;
+
   return {
     title: seoMetadata.title,
     description: seoMetadata.description,
     keywords: seoMetadata.keywords,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: seoMetadata.title,
       description: seoMetadata.description,
       images: [productData[productSlug].imageUrl],
+      url: canonicalUrl,
     },
   };
 }

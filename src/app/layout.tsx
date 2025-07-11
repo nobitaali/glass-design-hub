@@ -10,18 +10,22 @@ import { ThemeProvider } from "next-themes";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.jayasticker.id"),
   title: "Kaca Film & Sandblast Jogja | Interior Solutions",
   description: "Spesialis kaca film, sandblast & stiker dekoratif Yogyakarta. Pemasangan profesional seluruh Indonesia. Garansi resmi, harga terjangkau!",
   keywords: "kaca film jogja, sandblast jogja, stiker dekoratif jogja, kaca film mobil jogja, kaca film rumah jogja, sandblast motif, stiker vinyl jogja, interior design jogja, kaca film hitam, kaca film silver, stiker tembok, one way vision, cutting sticker, reflektor, pemasangan kaca film jogja, jasa sandblast jogja, dekorasi interior, privasi kaca, anti panas, UV protection, kaca film murah jogja, sandblast murah jogja",
   authors: [{ name: "Interior Solutions Indonesia" }],
   robots: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     locale: "id_ID",
     siteName: "Interior Solutions Indonesia",
     title: "Stiker Kaca Jogja | Kaca Film, Sandblast Es Buram & Cutting Oracal – Jaya Sticker Custom",
     description: "✅ Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan di Yogyakarta. Pemasangan profesional seluruh Indonesia. Harga terjangkau, kualitas terbaik!",
     type: "website",
-    url: "https://www.jayasticker.id/",
+    url: "/",
     images: [
       {
         url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&h=630&fit=crop",
@@ -42,7 +46,7 @@ export const metadata: Metadata = {
     "geo.region": "ID-YO",
     "geo.country": "Indonesia",
     "geo.placename": "Yogyakarta",
-    "ICBM": "-7.794295016481657, 110.39691781552109", 
+    "ICBM": "-7.794295016481657, 110.39691781552109",
   },
 };
 
@@ -54,7 +58,6 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
-        <link rel="canonical" href="https://www.jayasticker.id" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
