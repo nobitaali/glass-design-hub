@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     locale: "id_ID",
     siteName: "Interior Solutions Indonesia",
-    title: "Kaca Film, Sandblast & Stiker Dekoratif Jogja | Interior Solutions Indonesia",
+    title: "Stiker Kaca Jogja | Kaca Film, Sandblast Es Buram & Cutting Oracal – Jaya Sticker Custom",
     description: "✅ Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan di Yogyakarta. Pemasangan profesional seluruh Indonesia. Harga terjangkau, kualitas terbaik!",
     type: "website",
     url: "https://www.jayasticker.id/",
