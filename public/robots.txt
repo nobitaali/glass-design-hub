@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com/sitemap.xml
+Sitemap: https://jayasticker.netlify.app/sitemap.xml
 
 # Important pages
 Allow: /testimonials
@@ -12,5 +12,5 @@ Allow: /product/
 Disallow: /admin/
 Disallow: /private/
 
-# Crawl delay
+# Crawl delay to reduce server load
 Crawl-delay: 1
