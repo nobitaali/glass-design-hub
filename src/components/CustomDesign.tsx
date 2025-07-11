@@ -76,7 +76,7 @@ const CustomDesign = () => {
           
           <div className="mt-8 pt-8 border-t border-border">
             <p className="text-sm text-muted-foreground">
-              📞 Hubungi kami: 0812-3456-7890 | 📧 info@interiorfilm.com
+              📞 Hubungi kami: 0812-3456-7890 | 📧 jayastiker25@gmail.com
             </p>
           </div>
         </div>

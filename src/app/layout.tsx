@@ -71,7 +71,7 @@ export default function RootLayout({
               "description": "Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan",
               "url": "https://jayasticker.netlify.app/",
               "telephone": "+62851-5627-5565",
-              "email": "info@interiorfilm.com",
+              "email": "jayastiker25@gmail.com",
               "address": {
                 "@type": "PostalAddress",
                 "streetAddress": "Jakarta Selatan",

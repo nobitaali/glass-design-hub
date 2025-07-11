@@ -7,13 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 const GoogleMaps = () => {
   const handleWhatsAppClick = () => {
     const phoneNumber = "6285156275565";
-    const message = "Halo! Saya ingin konsultasi mengenai layanan kaca film dan sandblast. Mohon informasi lokasi dan jadwal kunjungan.";
+    const message = "Halo! Saya ingin konsultasi mengenai layanan kaca film dan sandblast di Jl. Nakula No.82A, Sokowaten, Banguntapan. Mohon informasi detail lokasi dan jadwal kunjungan.";
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
 
   const handleDirectionsClick = () => {
-    window.open("https://g.co/kgs/Mv7L7nK", "_blank");
+    window.open("https://www.google.com/maps/dir/?api=1&destination=Jl.+Nakula+No.82A,+RT.03%2FRW.15,+Sokowaten,+Banguntapan,+Kec.+Banguntapan,+Kabupaten+Bantul,+Daerah+Istimewa+Yogyakarta+55198", "_blank");
   };
 
   return (
@@ -33,7 +33,7 @@ const GoogleMaps = () => {
           <div className="relative">
             <div className="aspect-video rounded-lg overflow-hidden shadow-lg">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.521260322283!2d106.8166!3d-6.200000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d2e764b12d%3A0x3d2ad6e1e0e9b888!2sJakarta%2C%20Indonesia!5e0!3m2!1sen!2sid!4v1703123456789!5m2!1sen!2sid"
+               src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3949.0660013517!2d110.39692852883563!3d-7.794094505634561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s-7.794094505634561%2C%20110.39692852883563!5e0!3m2!1sen!2sid!4v1703123456789!5m2!1sen!2sid"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
@@ -61,7 +61,7 @@ const GoogleMaps = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="h-5 w-5 text-primary" />
-                  Kantor Pusat Jakarta
+                  Jaya Sticker Yogyakarta
                 </CardTitle>
                 <CardDescription>
                   Melayani konsultasi, survey, dan pemasangan
@@ -72,15 +72,15 @@ const GoogleMaps = () => {
                   <div>
                     <h4 className="font-semibold mb-2">📍 Alamat:</h4>
                     <p className="text-muted-foreground">
-                      Jakarta Pusat, DKI Jakarta, Indonesia
+                      Jl. Nakula No.82A, RT.03/RW.15, Sokowaten, Banguntapan, Kec. Banguntapan, Kabupaten Bantul, Daerah Istimewa Yogyakarta 55198
                     </p>
                   </div>
                   
                   <div>
                     <h4 className="font-semibold mb-2">🕒 Jam Operasional:</h4>
                     <div className="text-muted-foreground space-y-1">
-                      <p>Senin - Jumat: 08:00 - 17:00 WIB</p>
-                      <p>Sabtu: 08:00 - 15:00 WIB</p>
+                      <p>Senin - Jumat: 09:00 - 18:00 WIB</p>
+                      <p>Sabtu: 09:00 - 14:00 WIB</p>
                       <p>Minggu: Konsultasi via WhatsApp</p>
                     </div>
                   </div>
@@ -88,10 +88,10 @@ const GoogleMaps = () => {
                   <div>
                     <h4 className="font-semibold mb-2">🚚 Area Pengiriman:</h4>
                     <div className="text-muted-foreground space-y-1">
-                      <p>• Jakarta & Sekitarnya: Same Day Service</p>
-                      <p>• Jabodetabek: 1-2 Hari Kerja</p>
-                      <p>• Jawa: 2-3 Hari Kerja</p>
-                      <p>• Luar Jawa: 3-7 Hari Kerja</p>
+                      <p>• Yogyakarta & Sekitarnya: Same Day Service</p>
+                      <p>• Solo & Semarang: 1-2 Hari Kerja</p>
+                      <p>• Jawa Tengah: 2-3 Hari Kerja</p>
+                      <p>• Luar Jawa Tengah: 3-7 Hari Kerja</p>
                     </div>
                   </div>
                 </div>
