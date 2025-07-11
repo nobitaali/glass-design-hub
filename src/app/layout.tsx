@@ -10,16 +10,16 @@ import { ThemeProvider } from "next-themes";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Kaca Film & Sandblast Jakarta | Interior Solutions",
-  description: "Spesialis kaca film, sandblast & stiker dekoratif Jakarta. Pemasangan profesional seluruh Indonesia. Garansi resmi, harga terjangkau!",
-  keywords: "kaca film jakarta, sandblast jakarta, stiker dekoratif jakarta, kaca film mobil, kaca film gedung, sandblast motif, stiker vinyl, interior design jakarta, kaca film hitam, kaca film silver, stiker tembok, one way vision, cutting sticker, reflektor, pemasangan kaca film jakarta, jasa sandblast jakarta, dekorasi interior, privasi kaca, anti panas, UV protection, kaca film murah jakarta, sandblast murah jakarta",
+  title: "Kaca Film & Sandblast Jogja | Interior Solutions",
+  description: "Spesialis kaca film, sandblast & stiker dekoratif Yogyakarta. Pemasangan profesional seluruh Indonesia. Garansi resmi, harga terjangkau!",
+  keywords: "kaca film jogja, sandblast jogja, stiker dekoratif jogja, kaca film mobil jogja, kaca film rumah jogja, sandblast motif, stiker vinyl jogja, interior design jogja, kaca film hitam, kaca film silver, stiker tembok, one way vision, cutting sticker, reflektor, pemasangan kaca film jogja, jasa sandblast jogja, dekorasi interior, privasi kaca, anti panas, UV protection, kaca film murah jogja, sandblast murah jogja",
   authors: [{ name: "Interior Solutions Indonesia" }],
   robots: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
   openGraph: {
     locale: "id_ID",
     siteName: "Interior Solutions Indonesia",
-    title: "Kaca Film, Sandblast & Stiker Dekoratif Terbaik Jakarta | Interior Solutions Indonesia",
-    description: "✅ Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan. Pemasangan profesional ke seluruh Indonesia. Harga terjangkau, kualitas terbaik!",
+    title: "Kaca Film, Sandblast & Stiker Dekoratif Jogja | Interior Solutions Indonesia",
+    description: "✅ Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan di Yogyakarta. Pemasangan profesional seluruh Indonesia. Harga terjangkau, kualitas terbaik!",
     type: "website",
     url: "https://www.jayasticker.id/",
     images: [
@@ -33,16 +33,16 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kaca Film, Sandblast & Stiker Dekoratif Jakarta | Interior Solutions Indonesia",
+    title: "Kaca Film, Sandblast & Stiker Dekoratif Jogja | Interior Solutions Indonesia",
     description: "✅ Spesialis kaca film, sandblast, dan stiker dekoratif. Pemasangan profesional seluruh Indonesia. Harga terjangkau!",
     images: ["https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&h=630&fit=crop"],
   },
   other: {
     "theme-color": "#1a1a1a",
-    "geo.region": "ID-JK",
+    "geo.region": "ID-YO",
     "geo.country": "Indonesia",
-    "geo.placename": "Jakarta",
-    "ICBM": "-6.200000, 106.816666",
+    "geo.placename": "Yogyakarta",
+    "ICBM": "-7.794295016481657, 110.39691781552109", 
   },
 };
 
