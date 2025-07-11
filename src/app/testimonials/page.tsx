@@ -91,9 +91,9 @@ export default function Testimonials() {
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-primary/10 to-secondary/10">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Testimoni Klien
-          </h1>
+          </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
             Kepercayaan dari perusahaan-perusahaan besar Indonesia adalah motivasi kami untuk terus memberikan pelayanan terbaik
           </p>

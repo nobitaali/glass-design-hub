@@ -26,7 +26,7 @@ const Header = () => {
         <div className="py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold">Interior Film Solutions</h1>
+              <h2 className="text-2xl font-bold">Interior Film Solutions</h2>
               <p className="text-sm opacity-90">Spesialis Kaca Film, Sandblast & Stiker Dekoratif</p>
             </div>
             
