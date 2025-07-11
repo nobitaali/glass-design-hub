@@ -1,73 +1,73 @@
-# Welcome to your Lovable project
+# Interior Solutions Indonesia - Product Catalog
 
-## Project info
+## Project Overview
+A modern, SEO-optimized product catalog for Interior Solutions Indonesia, specializing in glass films, sandblast, and decorative stickers.
 
-**URL**: https://www.jayasticker.id
+## Features
+- Dynamic product catalog with SEO-friendly metadata
+- Responsive design using Tailwind CSS
+- Server-side rendering with Next.js
+- Centralized product data management
+- Comprehensive SEO optimization
 
-## How can I edit this code?
+## Project Structure
 
-There are several ways of editing your application.
+### Key Directories
+- `src/lib/product-data.ts`: Centralized product data management
+- `src/app/product/[productId]/page.tsx`: Dynamic product detail pages
+- `src/components/ProductCatalog.tsx`: Product listing and categorization
+- `public/`: Static assets and SEO files
 
-**Use Lovable**
+### SEO Optimization
+- Dynamic sitemap generation
+- Robots.txt configuration
+- Metadata generation for each product
+- Structured data for rich search results
 
-Simply visit the [Lovable Project](https://www.jayasticker.id) and start prompting.
+## Product Data Structure
+Each product in `product-data.ts` includes:
+- Basic information (title, description)
+- SEO metadata
+- Features
+- Specifications
+- Pricing
+- Category
 
-Changes made via Lovable will be committed automatically to this repo.
+## SEO Metadata Fields
+- `metaTitle`: Page title for search results
+- `metaDescription`: Concise product description
+- `keywords`: Relevant search terms
+- `structuredData`: Schema.org compatible metadata
 
-**Use your preferred IDE**
+## Development
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
+- Node.js
+- npm or yarn
+- Next.js
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
+1. Clone the repository
+2. Run `npm install`
+3. Start development server: `npm run dev`
 
-Follow these steps:
+## Deployment
+- Optimized for Vercel
+- Supports static site generation
+- Automatic sitemap and robots.txt generation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Performance Optimization
+- Lazy loading of images
+- Minimal JavaScript bundle
+- Server-side rendering
+- Static site generation capabilities
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://www.jayasticker.id) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## License
+Proprietary - Interior Solutions Indonesia
