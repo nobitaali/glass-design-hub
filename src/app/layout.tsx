@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Kaca Film, Sandblast & Stiker Dekoratif Terbaik Jakarta | Interior Solutions Indonesia",
     description: "✅ Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan. Pemasangan profesional ke seluruh Indonesia. Harga terjangkau, kualitas terbaik!",
     type: "website",
-    url: "https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com",
+    url: "https://jayasticker.netlify.app/",
     images: [
       {
         url: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&h=630&fit=crop",
@@ -54,10 +54,12 @@ export default function RootLayout({
   return (
     <html lang="id">
       <head>
-        <link rel="canonical" href="https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com" />
+        <link rel="canonical" href="https:ja.lovableproject.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <meta name="google-site-verification" content="Z4jQZ-VVe8LrGUuWK1404dn7o6-tnNeQvmf-pLytdWQ" />
+
         
         <script
           type="application/ld+json"
@@ -67,7 +69,7 @@ export default function RootLayout({
               "@type": "LocalBusiness",
               "name": "Interior Solutions Indonesia",
               "description": "Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan",
-              "url": "https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com",
+              "url": "https://jayasticker.netlify.app/",
               "telephone": "+62851-5627-5565",
               "email": "info@interiorfilm.com",
               "address": {
@@ -104,10 +106,9 @@ export default function RootLayout({
                 "availableLanguage": "Indonesian"
               },
               "sameAs": [
-                "https://www.facebook.com/interiorsolutions.id",
-                "https://www.instagram.com/interiorsolutions.id",
-                "https://www.youtube.com/c/InteriorSolutionsIndonesia",
-                "https://www.linkedin.com/company/interior-solutions-indonesia"
+                "https://www.facebook.com/jayasticker",
+                "https://www.instagram.com/jayasticker",
+    
               ]
             })
           }}
