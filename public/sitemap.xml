@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com/</loc>
+    <loc>https://jayasticker.netlify.app/</loc>
     <lastmod>2024-12-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&h=630&fit=crop</image:loc>
+      <image:loc>https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&amp;h=630&amp;fit=crop</image:loc>
       <image:title>Kaca Film dan Sandblast Berkualitas</image:title>
-      <image:caption>Interior Solutions Indonesia - Spesialis Kaca Film, Sandblast & Stiker Dekoratif</image:caption>
+      <image:caption>Interior Solutions Indonesia - Spesialis Kaca Film, Sandblast &amp; Stiker Dekoratif</image:caption>
     </image:image>
   </url>
   <url>
-    <loc>https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com/testimonials</loc>
+    <loc>https://jayasticker.netlify.app/testimonials</loc>
     <lastmod>2024-12-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com/product/sandblast-polos</loc>
+    <loc>https://jayasticker.netlify.app/product/sandblast-polos</loc>
     <lastmod>2024-12-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com/product/sandblast-motif</loc>
+    <loc>https://jayasticker.netlify.app/product/sandblast-motif</loc>
     <lastmod>2024-12-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com/product/kaca-film-black</loc>
+    <loc>https://jayasticker.netlify.app/product/kaca-film-black</loc>
     <lastmod>2024-12-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://14ed50bb-4d5d-4d96-9b7e-3900a484f421.lovableproject.com/product/stiker-oneway</loc>
+    <loc>https://jayasticker.netlify.app/product/stiker-oneway</loc>
     <lastmod>2024-12-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
