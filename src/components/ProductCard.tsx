@@ -1,31 +1,30 @@
-"use client";
-
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, MessageCircle, Eye } from "lucide-react";
-import Link from "next/link";
+import { Check, Eye } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import QuoteRequestButton from "@/components/QuoteRequestButton";
-import { normalizeSlug } from "@/lib/utils";
-import { productData } from "@/lib/product-data";
+import { Product } from "@/lib/supabase";
 
 interface ProductCardProps {
-  slug: string;
+  product: Product;
 }
 
-const ProductCard = ({ slug }: ProductCardProps) => {
-  const product = productData[slug];
-  
-  if (!product) return null;
-
+export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-      {/* Product Image */}
+    <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden critical-render">
       <div className="relative h-48 overflow-hidden">
-        <img 
-          src={product.imageUrl} 
+        <Image 
+          src={product.image_url} 
           alt={product.title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority={false}
+          loading="lazy"
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
@@ -50,7 +49,7 @@ const ProductCard = ({ slug }: ProductCardProps) => {
       
       <CardContent className="pt-0">
         <div className="space-y-2 mb-6">
-          {product.features.map((feature: string, index: number) => (
+          {product.features.slice(0, 3).map((feature: string, index: number) => (
             <div key={index} className="flex items-start space-x-2">
               <Check className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
               <span className="text-sm text-muted-foreground">{feature}</span>
@@ -61,7 +60,7 @@ const ProductCard = ({ slug }: ProductCardProps) => {
         <div className="flex flex-col gap-2">
           <div className="flex gap-2">
             <Button size="sm" className="flex-1" variant="outline" asChild>
-              <Link href={`/product/${slug}`}>
+              <Link href={`/product/${product.slug}`}>
                 <Eye className="h-4 w-4 mr-1" />
                 Detail
               </Link>
@@ -73,6 +72,4 @@ const ProductCard = ({ slug }: ProductCardProps) => {
       </CardContent>
     </Card>
   );
-};
-
-export default ProductCard;
+}

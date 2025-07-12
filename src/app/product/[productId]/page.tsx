@@ -6,13 +6,8 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { normalizeSlug } from "@/lib/utils";
 import { ProductDetailActions } from "@/components/ProductDetailActions";
-import { 
-  productData, 
-  getProductSEOMetadata, 
-  getProductBySlug 
-} from "@/lib/product-data";
+import { productService } from "@/lib/supabase";
 
 interface ProductDetailProps {
   params: {
@@ -21,35 +16,44 @@ interface ProductDetailProps {
 }
 
 export async function generateMetadata({ params }: ProductDetailProps): Promise<Metadata> {
-  const productSlug = normalizeSlug(params.productId);
-  const seoMetadata = getProductSEOMetadata(productSlug);
+  const product = await productService.getProductBySlug(params.productId);
 
-  if (!seoMetadata)
+  if (!product) {
     return {
       title: "Produk Tidak Ditemukan – Interior Solutions Indonesia",
     };
+  }
 
-  const canonicalUrl = `https://www.jayasticker.id/product/${productSlug}`;
+  const canonicalUrl = `https://www.jayasticker.id/product/${product.slug}`;
 
   return {
-    title: seoMetadata.title,
-    description: seoMetadata.description,
-    keywords: seoMetadata.keywords,
+    title: product.seo_meta_title || product.title,
+    description: product.seo_meta_description || product.description,
+    keywords: product.seo_keywords?.join(", "),
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: seoMetadata.title,
-      description: seoMetadata.description,
-      images: [productData[productSlug].imageUrl],
+      title: product.seo_meta_title || product.title,
+      description: product.seo_meta_description || product.description,
+      images: [product.image_url],
       url: canonicalUrl,
     },
+    other: {
+      'structured-data': JSON.stringify(product.seo_structured_data || {})
+    }
   };
 }
 
-export default function ProductDetail({ params }: ProductDetailProps) {
-  const productSlug = normalizeSlug(params.productId);
-  const product = getProductBySlug(productSlug);
+export async function generateStaticParams() {
+  const slugs = await productService.getAllProductSlugs();
+  return slugs.map((slug) => ({
+    productId: slug,
+  }));
+}
+
+export default async function ProductDetail({ params }: ProductDetailProps) {
+  const product = await productService.getProductBySlug(params.productId);
 
   if (!product) notFound();
 
@@ -66,7 +70,7 @@ export default function ProductDetail({ params }: ProductDetailProps) {
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Product Image */}
           <div className="relative">
-            <img src={product.imageUrl} alt={product.title} className="w-full h-96 object-cover rounded-lg shadow-lg" />
+            <img src={product.image_url} alt={product.title} className="w-full h-96 object-cover rounded-lg shadow-lg" />
             <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">{product.category}</Badge>
           </div>
 
@@ -82,10 +86,10 @@ export default function ProductDetail({ params }: ProductDetailProps) {
             <div>
               <h3 className="text-xl font-semibold mb-2">Keunggulan Produk:</h3>
               <ul className="space-y-2">
-                {product.features.map((f: string) => (
-                  <li key={f} className="flex items-start space-x-3">
+                {product.features.map((feature: string, index: number) => (
+                  <li key={index} className="flex items-start space-x-3">
                     <Check className="h-5 w-5 text-primary mt-[2px]" />
-                    <span className="text-muted-foreground">{f}</span>
+                    <span className="text-muted-foreground">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -117,16 +121,16 @@ export default function ProductDetail({ params }: ProductDetailProps) {
             <CardTitle>Deskripsi Lengkap</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground leading-relaxed mb-6">{product.longDescription}</p>
+            <p className="text-muted-foreground leading-relaxed mb-6">{product.long_description}</p>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <h4 className="font-semibold mb-3">Spesifikasi Teknis:</h4>
                 <div className="space-y-2">
-                  {Object.entries(product.specifications).map(([k, v]) => (
-                    <div key={k} className="flex justify-between">
-                      <span className="text-muted-foreground">{k}:</span>
-                      <span className="font-medium">{v as string}</span>
+                  {Object.entries(product.specifications).map(([key, value]) => (
+                    <div key={key} className="flex justify-between">
+                      <span className="text-muted-foreground">{key}:</span>
+                      <span className="font-medium">{value}</span>
                     </div>
                   ))}
                 </div>
@@ -143,11 +147,11 @@ export default function ProductDetail({ params }: ProductDetailProps) {
         </Card>
 
         {/* TAG LIST */}
-        {product.seo?.keywords && (
+        {product.seo_keywords && product.seo_keywords.length > 0 && (
           <div className="mb-16">
             <h3 className="font-semibold mb-2">Tag:</h3>
             <div className="flex flex-wrap gap-2">
-              {product.seo.keywords.map((tag: string) => (
+              {product.seo_keywords.map((tag: string) => (
                 <Badge key={tag} variant="secondary">
                   #{tag}
                 </Badge>
@@ -156,6 +160,19 @@ export default function ProductDetail({ params }: ProductDetailProps) {
           </div>
         )}
       </div>
+
+      {/* Structured Data */}
+      {product.seo_structured_data && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              ...product.seo_structured_data
+            })
+          }}
+        />
+      )}
 
       <Footer />
     </div>
