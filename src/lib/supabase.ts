@@ -103,6 +103,22 @@ export const productService = {
     return categories
   },
 
+  // Get products by tag
+  async getProductsByTag(tag: string): Promise<Product[]> {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .textSearch('seo_keywords', tag.replace(/-/g, ' '))
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Error fetching products by tag:', error)
+      return []
+    }
+
+    return data || []
+  },
+
   // Create new product (for admin)
   async createProduct(product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<Product | null> {
     const { data, error } = await supabase

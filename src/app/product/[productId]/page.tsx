@@ -8,6 +8,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetailActions } from "@/components/ProductDetailActions";
 import { productService } from "@/lib/supabase";
+import { keywordsToPipeline, keywordsToTags } from "@/lib/utils";
 
 interface ProductDetailProps {
   params: {
@@ -26,6 +27,9 @@ export async function generateMetadata({ params }: ProductDetailProps): Promise<
 
   const canonicalUrl = `https://www.jayasticker.id/product/${product.slug}`;
 
+  const pipelineKeywords = product.seo_keywords ? keywordsToPipeline(product.seo_keywords) : '';
+  const urlTags = product.seo_keywords ? keywordsToTags(product.seo_keywords) : [];
+
   return {
     title: product.seo_meta_title || product.title,
     description: product.seo_meta_description || product.description,
@@ -40,7 +44,9 @@ export async function generateMetadata({ params }: ProductDetailProps): Promise<
       url: canonicalUrl,
     },
     other: {
-      'structured-data': JSON.stringify(product.seo_structured_data || {})
+      'structured-data': JSON.stringify(product.seo_structured_data || {}),
+      'keywords-pipeline': pipelineKeywords,
+      'url-tags': urlTags.join(',')
     }
   };
 }
@@ -151,11 +157,17 @@ export default async function ProductDetail({ params }: ProductDetailProps) {
           <div className="mb-16">
             <h3 className="font-semibold mb-2">Tag:</h3>
             <div className="flex flex-wrap gap-2">
-              {product.seo_keywords.map((tag: string) => (
-                <Badge key={tag} variant="secondary">
-                  #{tag}
+              {keywordsToTags(product.seo_keywords).map((tag: string) => (
+                <Badge key={tag} variant="secondary" className="hover:bg-primary/10">
+                  <Link href={`/tag/${tag}`} className="hover:text-primary">
+                    #{tag}
+                  </Link>
                 </Badge>
               ))}
+            </div>
+            <div className="mt-4 text-sm text-muted-foreground">
+              <span className="font-medium">Keywords: </span>
+              {keywordsToPipeline(product.seo_keywords)}
             </div>
           </div>
         )}
