@@ -17,7 +17,30 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.jayasticker.id"),
-  title: "Kaca Film & Sandblast Jogja | Interior Solutions",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png' }
+    ],
+    other: [
+      {
+        rel: 'android-chrome',
+        url: '/android-chrome-192x192.png',
+        sizes: '192x192',
+      },
+      {
+        rel: 'android-chrome',
+        url: '/android-chrome-512x512.png',
+        sizes: '512x512',
+      },
+    ],
+  },
+  manifest: '/site.webmanifest',
+  title: "Kaca Film | Sandblast Jogja | Interior Solutions | Stiker Gedung | Jaya Sticker Custom",
   description: "Spesialis kaca film, sandblast & stiker dekoratif Yogyakarta. Pemasangan profesional seluruh Indonesia. Garansi resmi, harga terjangkau!",
   keywords: "kaca film jogja, sandblast jogja, stiker dekoratif jogja, kaca film mobil jogja, kaca film rumah jogja, sandblast motif, stiker vinyl jogja, interior design jogja, kaca film hitam, kaca film silver, stiker tembok, one way vision, cutting sticker, reflektor, pemasangan kaca film jogja, jasa sandblast jogja, dekorasi interior, privasi kaca, anti panas, UV protection, kaca film murah jogja, sandblast murah jogja",
   authors: [{ name: "Interior Solutions Indonesia" }],
