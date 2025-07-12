@@ -13,8 +13,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Testimoni() {
-  const testimoni = [
+export default function Testimonials() {
+  const testimonials = [
     {
       company: "PT Indofood Sukses Makmur",
       type: "Perusahaan Multinasional",
@@ -114,7 +114,7 @@ export default function Testimoni() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimoni.map((item, index) => (
+            {testimonials.map((item, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between mb-4">
