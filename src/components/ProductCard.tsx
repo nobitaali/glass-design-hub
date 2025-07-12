@@ -14,7 +14,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden critical-render">
+    <Card className="group hover:shadow-lg group flex flex-col h-full justify-between transition-all duration-300 hover:-translate-y-1 overflow-hidden critical-render">
       <div className="relative h-48 overflow-hidden">
         <Image 
           src={product.image_url} 

@@ -96,77 +96,74 @@ export default function ProductCatalog() {
           </p>
         </div>
 
-        <Tabs
-          defaultValue="all"
-          className="w-full"
-          aria-label="Product Categories"
+        <Tabs defaultValue="all" className="w-full " aria-label="Product Categories">
+        <TabsList
+  className="flex flex-wrap h-full justify-center items-center gap-2 p-4 mb-4 mx-auto max-w-full sm:max-w-[90%] md:max-w-[80%] lg:max-w-[70%]"
+>
+
+    <TabsTrigger
+      key="ALL"
+      value="all"
+      className="text-sm px-4 py-2 lg:text-base"
+    >
+      Semua Produk
+    </TabsTrigger>
+    {categories.map((category) => (
+      <TabsTrigger
+        key={category}
+        value={normalizeSlug(category)}
+        className="text-sm px-4 py-2 lg:text-base"
+      >
+        {category}
+      </TabsTrigger>
+    ))}
+  </TabsList>
+
+  <TabsContent key="ALL" value="all" className="critical-render">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {paginatedProducts.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+    {products.length > PAGE_SIZE && (
+      <div className="flex justify-center mt-8">
+        <button 
+          onClick={() => setCurrentPage(prev => prev + 1)}
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+          disabled={currentPage * PAGE_SIZE >= products.length}
         >
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger
-              key="ALL"
-              value="all"
-              className="text-sm lg:text-base"
-            >
-               Semua Produk
-            </TabsTrigger>
-            {categories.map((category) => (
-              <TabsTrigger
-                key={category}
-                value={normalizeSlug(category)}
-                className="text-sm lg:text-base"
-              >
-                {category}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          {currentPage * PAGE_SIZE >= products.length ? 'No More Products' : 'Load More'}
+        </button>
+      </div>
+    )}
+  </TabsContent>
 
-          <TabsContent
-            key="ALL"
-            value="all"
-            className="critical-render"
-          >
-            <div className={'grid md:grid-cols-2 lg:grid-cols-4 gap-6'}>
-              {paginatedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-            {products.length > PAGE_SIZE && (
-              <div className="flex justify-center mt-8">
-                <button 
-                  onClick={() => setCurrentPage(prev => prev + 1)}
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-                  disabled={currentPage * PAGE_SIZE >= products.length}
-                >
-                  {currentPage * PAGE_SIZE >= products.length ? 'No More Products' : 'Load More'}
-                </button>
-              </div>
-            )}
-          </TabsContent>
+  {categories.map((category) => {
+    const categoryProducts = productsByCategory[category] || [];
+    return (
+      <TabsContent
+        key={category}
+        value={normalizeSlug(category)}
+        className="critical-render"
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categoryProducts.slice(0, 6).map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+        {categoryProducts.length > 6 && (
+          <div className="text-center mt-8">
+            <p className="text-muted-foreground">
+              Menampilkan 6 dari {categoryProducts.length} produk dalam kategori {category}
+            </p>
+          </div>
+        )}
+      </TabsContent>
+    );
+  })}
+</Tabs>
 
-          {categories.map((category) => {
-            const categoryProducts = productsByCategory[category] || [];
-            return (
-              <TabsContent
-                key={category}
-                value={normalizeSlug(category)}
-                className="critical-render"
-              >
-                <div className={'grid md:grid-cols-2 lg:grid-cols-3 gap-6'}>
-                  {categoryProducts.slice(0, 6).map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-                {categoryProducts.length > 6 && (
-                  <div className="text-center mt-8">
-                    <p className="text-muted-foreground">
-                      Menampilkan 6 dari {categoryProducts.length} produk dalam kategori {category}
-                    </p>
-                  </div>
-                )}
-              </TabsContent>
-            );
-          })}
-        </Tabs>
+
       </div>
     </section>
   );
