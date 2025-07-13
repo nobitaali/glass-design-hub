@@ -3,7 +3,7 @@ Allow: /
 Sitemap: https://www.jayasticker.id/sitemap.xml
 
 # Crawl-delay to be respectful
-Crawl-delay: 10
+Crawl-delay: 1
 
 # Directories to exclude
 Disallow: /api/
