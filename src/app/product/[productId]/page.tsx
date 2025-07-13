@@ -1,4 +1,5 @@
 import { ArrowLeft, Check, Star, Shield, Truck } from "lucide-react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
@@ -76,7 +77,13 @@ export default async function ProductDetail({ params }: ProductDetailProps) {
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           {/* Product Image */}
           <div className="relative">
-            <img src={product.image_url} alt={product.title} className="w-full h-96 object-cover rounded-lg shadow-lg" />
+            <Image
+              src={product.image_url}
+              alt={product.title}
+              width={1920}
+              height={1080}
+              className="w-full h-96 object-cover rounded-lg shadow-lg"
+            />
             <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">{product.category}</Badge>
           </div>
 
