@@ -7,7 +7,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryProvider } from "./providers";
 import { ThemeProvider } from "next-themes";
-
+const analitics = process.env.NEXT_PUBLIC_ENABLE_GA_TRACKING!
 const inter = Inter({ 
   subsets: ["latin"],
   display: 'swap',
@@ -96,12 +96,17 @@ export default function RootLayout({
         <meta name="google-site-verification" content="Z4jQZ-VVe8LrGUuWK1404dn7o6-tnNeQvmf-pLytdWQ" />
 
         {/* Optimized script loading */}
+        {analitics==="true"&& 
         <Script
           id="google-analytics"
           strategy="worker"
           src={`https://www.googletagmanager.com/gtag/js?id=G-91VW4NNVRS`}
         />
-        <Script
+        
+        
+        }
+
+        {analitics==="true"&&<Script
           id="gtag-init"
           strategy="worker"
           dangerouslySetInnerHTML={{
@@ -114,7 +119,7 @@ export default function RootLayout({
               }
             `,
           }}
-        />
+        />}
         
         {/* Optimized schema loading */}
         <Script
