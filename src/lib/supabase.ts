@@ -7,6 +7,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Types for our database
 export interface Product {
+  additional_images: any[]
   id: string
   slug: string
   title: string
@@ -24,6 +25,7 @@ export interface Product {
   created_at: string
   updated_at: string
 }
+
 
 // Product service functions
 export const productService = {

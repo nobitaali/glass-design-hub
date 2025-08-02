@@ -8,7 +8,7 @@ const Header = dynamic(() => import("@/components/Header"), {
 
 const Hero = dynamic(() => import("@/components/Hero"), {
   loading: () => <div>Loading hero...</div>,
-  ssr: false
+
 });
 
 const ProductCatalog = dynamic(() => import("@/components/ProductCatalog"), {

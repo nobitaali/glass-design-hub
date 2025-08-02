@@ -137,16 +137,16 @@ export default function RootLayout({
               "email": "jayastiker25@gmail.com",
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Jakarta Selatan",
-                "addressLocality": "Jakarta",
-                "addressRegion": "DKI Jakarta",
+                "streetAddress": "Jl. Nakula No.82A, RT.03/RW.15, Sokowaten, Banguntapan, Kec. Banguntapan, Kabupaten Bantul, Daerah Istimewa Yogyakarta 55198",
+                "addressLocality": "Bantul",
+                "addressRegion": "Yogyakarta",
                 "postalCode": "12560",
                 "addressCountry": "Indonesia"
               },
               "geo": {
                 "@type": "GeoCoordinates",
-                "latitude": "-6.200000",
-                "longitude": "106.816666"
+                "latitude": "-7.794307601516723",
+                "longitude": "110.3968939298367"
               },
               "areaServed": {
                 "@type": "Country",

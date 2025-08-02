@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Award, Truck } from "lucide-react";
+import AutoImageSlider from "@/components/AutoImageSlider";
+// Static import - pastikan nama file benar
 
 const Hero = () => {
   return (
@@ -42,17 +44,8 @@ const Hero = () => {
               </div>
             </div>
           </div>
-          
-          <div className="relative">
-            <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-2xl p-8 h-96 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-32 h-32 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="w-20 h-20 bg-primary rounded-full"></div>
-                </div>
-                <p className="text-sm text-muted-foreground">Tampilan Hasil Kaca Film Premium</p>
-              </div>
-            </div>
-          </div>
+
+          <AutoImageSlider />
         </div>
       </div>
     </section>
