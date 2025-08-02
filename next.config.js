@@ -62,6 +62,10 @@ const nextConfig = {
       }
     ];
   },
+
+   compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   productionBrowserSourceMaps: false,
   optimizeFonts: true,
   swcMinify: true,
