@@ -13,7 +13,7 @@ const GoogleMaps = () => {
   };
 
   const handleDirectionsClick = () => {
-    window.open("https://www.google.com/maps/dir/?api=1&destination=Jl.+Nakula+No.82A,+RT.03%2FRW.15,+Sokowaten,+Banguntapan,+Kec.+Banguntapan,+Kabupaten+Bantul,+Daerah+Istimewa+Yogyakarta+55198", "_blank");
+    window.open("https://www.google.com/maps/place/Jaya+Sticker+%7C+Stiker+Kaca+%7C+Sandblast+%7C+Kaca+Film+Jogja+%7C+Stiker+Jogja/@-7.7943071,110.3962741,19z/data=!3m1!4b1!4m6!3m5!1s0x2dd9d14bfd5dc281:0xd4b275c361c90eec!8m2!3d-7.7943071!4d110.3969178!16s%2Fg%2F11g18fmhsr?entry=ttu&g_ep=EgoyMDI1MDczMC4wIKXMDSoASAFQAw%3D%3D", "_blank");
   };
 
   return (
@@ -33,7 +33,7 @@ const GoogleMaps = () => {
           <div className="relative">
             <div className="aspect-video rounded-lg overflow-hidden shadow-lg">
               <iframe
-               src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3949.0660013517!2d110.39692852883563!3d-7.794094505634561!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s-7.794094505634561%2C%20110.39692852883563!5e0!3m2!1sen!2sid!4v1703123456789!5m2!1sen!2sid"
+               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d247.05982108534718!2d110.39689623235486!3d-7.794363146732116!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd9d14bfd5dc281%3A0xd4b275c361c90eec!2sJaya%20Sticker%20%7C%20Stiker%20Kaca%20%7C%20Sandblast%20%7C%20Kaca%20Film%20Jogja%20%7C%20Stiker%20Jogja!5e0!3m2!1sid!2sid!4v1754159484114!5m2!1sid!2sid"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
