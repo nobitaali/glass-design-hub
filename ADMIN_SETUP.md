@@ -44,16 +44,32 @@ Run the complete SQL schema in your Supabase SQL editor:
 
 ### 2. Create Admin User
 
-After running the schema, you need to create an admin user:
+Ada beberapa cara untuk membuat admin user:
 
-1. **Sign up a user** in your Supabase Auth dashboard or via the application
-2. **Get the user ID** from the auth.users table
+#### Opsi A: Menggunakan Setup Page (Recommended)
+1. **Kunjungi** `/admin/setup` di browser Anda
+2. **Isi form** dengan data admin:
+   - Nama lengkap
+   - Email
+   - Password (minimal 6 karakter)
+3. **Klik** "Buat Admin User"
+4. **Cek email** untuk verifikasi (jika email confirmation diaktifkan)
+5. **Login** di `/admin/login`
+
+#### Opsi B: Manual via Supabase Dashboard
+1. **Sign up user** di Supabase Auth dashboard atau via aplikasi
+2. **Cek User ID** di tabel auth.users:
+   ```sql
+   SELECT id, email, created_at FROM auth.users;
+   ```
 3. **Insert admin record**:
+   ```sql
+   INSERT INTO admin_users (user_id, name, role) 
+   VALUES ('your-user-id-here', 'Admin Name', 'admin');
+   ```
 
-```sql
-INSERT INTO admin_users (user_id, name, role) 
-VALUES ('your-user-id-here', 'Admin Name', 'admin');
-```
+#### Opsi C: Menggunakan SQL Script
+Jalankan script `create-admin-user.sql` yang sudah disediakan untuk melihat dan membuat admin user.
 
 ### 3. Environment Setup
 

@@ -37,14 +37,32 @@ export default function AdminLoginPage() {
       }
 
       if (data.user) {
-        // Check if user has admin role (you can implement role-based access)
+        // Check if user has admin role
         const { data: profile, error: profileError } = await supabase
           .from('admin_users')
           .select('role')
           .eq('user_id', data.user.id)
           .single();
 
-        if (profileError || !profile) {
+        if (profileError) {
+          console.error("Profile error:", profileError);
+          if (profileError.code === 'PGRST116') {
+            setError(`User belum terdaftar sebagai admin. 
+            
+User ID: ${data.user.id}
+Email: ${data.user.email}
+
+Jalankan SQL ini di Supabase:
+INSERT INTO admin_users (user_id, name, role) 
+VALUES ('${data.user.id}', 'Admin User', 'admin');`);
+          } else {
+            setError(`Error: ${profileError.message} (Code: ${profileError.code})`);
+          }
+          await supabase.auth.signOut();
+          return;
+        }
+
+        if (!profile) {
           setError("Akses ditolak. Anda tidak memiliki izin admin.");
           await supabase.auth.signOut();
           return;

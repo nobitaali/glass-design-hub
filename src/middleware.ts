@@ -56,8 +56,10 @@ export async function middleware(request: NextRequest) {
 
   // Check if the route is an admin route
   if (request.nextUrl.pathname.startsWith('/admin')) {
-    // Skip login page
-    if (request.nextUrl.pathname === '/admin/login') {
+    // Skip login page, setup page, and add-existing page
+    if (request.nextUrl.pathname === '/admin/login' || 
+        request.nextUrl.pathname === '/admin/setup' ||
+        request.nextUrl.pathname === '/admin/add-existing') {
       return response
     }
 
