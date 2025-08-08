@@ -1,9 +1,9 @@
 import { MetadataRoute } from 'next'
-import { productService } from '@/lib/supabase'
+import { productService, blogService } from '@/lib/supabase'
 import { keywordsToTags } from '@/lib/utils'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.jayasticker.id'
+  const baseUrl = 'https://www.glassdesignhub.com'
   
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -12,6 +12,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9
     },
     {
       url: `${baseUrl}/testimonials`,
@@ -53,10 +59,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8
     }))
 
+    // Get all blog posts
+    const blogPosts = await blogService.getAllPosts()
+    
+    // Generate blog post pages
+    const blogPages: MetadataRoute.Sitemap = blogPosts.map(post => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.updated_at),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8
+    }))
+
     return [
       ...staticPages,
       ...productPages,
-      ...tagPages
+      ...tagPages,
+      ...blogPages
     ]
   } catch (error) {
     console.error('Error generating sitemap:', error)
