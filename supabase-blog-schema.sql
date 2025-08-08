@@ -124,7 +124,7 @@ INSERT INTO blog_posts (
   ARRAY['tren 2024', 'desain modern', 'interior', 'sustainable'],
   'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&h=630&fit=crop',
   true,
-  '10 Tren Desain Interior 2024 yang Wajib Anda Ketahui - Glass Design Hub',
+  '10 Tren Desain Interior 2024 yang Wajib Anda Ketahui - Jaya Sticker Indonesia',
   'Temukan tren desain interior terbaru 2024 yang akan mengubah rumah Anda. Dari material berkelanjutan hingga teknologi smart home.',
   ARRAY['tren desain interior 2024', 'desain rumah modern', 'interior trends', 'sustainable design']
 ),
@@ -164,7 +164,7 @@ INSERT INTO blog_posts (
   ARRAY['ruang tamu', 'furniture', 'space saving', 'ruang kecil'],
   'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200&h=630&fit=crop',
   false,
-  'Cara Memilih Furniture untuk Ruang Tamu Kecil - Glass Design Hub',
+  'Cara Memilih Furniture untuk Ruang Tamu Kecil - Jaya Sticker Indonesia',
   'Panduan lengkap memilih furniture yang tepat untuk ruang tamu kecil. Tips praktis agar ruang terlihat lebih luas dan fungsional.',
   ARRAY['furniture ruang tamu kecil', 'tips ruang tamu', 'space saving furniture', 'desain ruang kecil']
 ),
@@ -200,7 +200,7 @@ INSERT INTO blog_posts (
   ARRAY['dapur', 'minimalis', 'modern', 'kitchen design'],
   'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&h=630&fit=crop',
   true,
-  'Panduan Desain Dapur Minimalis Modern - Glass Design Hub',
+  'Panduan Desain Dapur Minimalis Modern - Jaya Sticker Indonesia',
   'Panduan lengkap menciptakan dapur minimalis modern yang fungsional dan estetis. Tips layout, material, dan storage solution.',
   ARRAY['desain dapur minimalis', 'dapur modern', 'kitchen design', 'dapur indonesia']
 );

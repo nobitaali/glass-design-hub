@@ -25,70 +25,27 @@ export default function AdminSetupPage() {
     setSuccess("");
 
     try {
-      const supabase = createClient();
-      
-      // 1. Try to sign up the user first
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
+      // Use API route to create admin user (bypasses RLS)
+      const response = await fetch('/api/admin/setup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          name
+        })
       });
 
-      let userId = null;
+      const result = await response.json();
 
-      if (signUpError) {
-        // If user already exists, try to get existing user
-        if (signUpError.message.includes('already registered') || signUpError.message.includes('already been registered')) {
-          // Try to sign in to get user ID
-          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-          });
-
-          if (signInError) {
-            setError(`User sudah ada tapi password salah: ${signInError.message}`);
-            return;
-          }
-
-          if (!signInData.user) {
-            setError("Gagal mendapatkan data user yang sudah ada");
-            return;
-          }
-
-          userId = signInData.user.id;
-          
-          // Sign out immediately since we just want the user ID
-          await supabase.auth.signOut();
-        } else {
-          setError(`Error creating user: ${signUpError.message}`);
-          return;
-        }
-      } else {
-        if (!signUpData.user) {
-          setError("Failed to create user");
-          return;
-        }
-        userId = signUpData.user.id;
-      }
-
-      // 2. Create admin record (use upsert to handle existing records)
-      const { error: adminError } = await supabase
-        .from('admin_users')
-        .upsert([
-          {
-            user_id: userId,
-            name: name,
-            role: 'admin'
-          }
-        ], {
-          onConflict: 'user_id'
-        });
-
-      if (adminError) {
-        setError(`Error creating admin record: ${adminError.message}`);
+      if (!response.ok) {
+        setError(result.error || 'Failed to create admin user');
         return;
       }
 
-      setSuccess(`Admin user berhasil dibuat/diperbarui! User ID: ${userId}. Silakan login di /admin/login`);
+      setSuccess(`${result.message}! User ID: ${result.userId}. Silakan login di /admin/login`);
       
       // Clear form
       setEmail("");
@@ -109,7 +66,7 @@ export default function AdminSetupPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <h1 className="text-2xl font-bold text-primary mb-2">Glass Design Hub</h1>
+            <h1 className="text-2xl font-bold text-primary mb-2">Jaya Sticker Indonesia</h1>
           </Link>
           <p className="text-muted-foreground">Admin Setup</p>
         </div>
@@ -164,7 +121,7 @@ export default function AdminSetupPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@glassdesignhub.com"
+                    placeholder="admin@jayasticker.id"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
@@ -214,7 +171,7 @@ export default function AdminSetupPage() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-muted-foreground">
-          <p>© 2024 Glass Design Hub. All rights reserved.</p>
+          <p>© 2024 Jaya Sticker Indonesia. All rights reserved.</p>
         </div>
       </div>
     </div>

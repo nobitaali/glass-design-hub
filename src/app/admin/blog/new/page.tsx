@@ -72,7 +72,7 @@ export default function NewBlogPostPage() {
     if (formData.title && !formData.seo_meta_title) {
       setFormData(prev => ({ 
         ...prev, 
-        seo_meta_title: `${formData.title} - Glass Design Hub` 
+        seo_meta_title: `${formData.title} - Jaya Sticker Indonesia` 
       }));
     }
   }, [formData.title]);

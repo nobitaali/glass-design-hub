@@ -21,13 +21,13 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   
   if (!post) {
     return {
-      title: "Artikel Tidak Ditemukan - Glass Design Hub",
+      title: "Artikel Tidak Ditemukan - Jaya Sticker Indonesia",
       description: "Artikel yang Anda cari tidak ditemukan.",
     };
   }
 
   return {
-    title: `${post.title} - Glass Design Hub`,
+    title: `${post.title} - Jaya Sticker Indonesia`,
     description: post.excerpt,
     keywords: post.tags,
     authors: [{ name: post.author }],
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
         },
       ],
       locale: "id_ID",
-      siteName: "Glass Design Hub",
+      siteName: "Jaya Sticker Indonesia",
     },
     twitter: {
       card: "summary_large_image",
@@ -102,13 +102,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     },
     publisher: {
       "@type": "Organization",
-      name: "Glass Design Hub",
+      name: "Jaya Sticker Indonesia",
     },
     datePublished: post.published_at,
     dateModified: post.updated_at,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://glassdesignhub.com/blog/${post.slug}`,
+      "@id": `https://jayasticker.id/blog/${post.slug}`,
     },
   };
 

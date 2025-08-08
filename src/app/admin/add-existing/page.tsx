@@ -78,23 +78,22 @@ export default function AddExistingUserPage() {
     setSuccess("");
 
     try {
-      const supabase = createClient();
-      
-      // Direct insert with known user ID
-      const { error: adminError } = await supabase
-        .from('admin_users')
-        .upsert([
-          {
-            user_id: '18d27cf9-150a-4f56-98eb-9d21455724cf',
-            name: 'Aisyah Admin',
-            role: 'admin'
-          }
-        ], {
-          onConflict: 'user_id'
-        });
+      // Use API route to add existing user as admin (bypasses RLS)
+      const response = await fetch('/api/admin/add-existing', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: '18d27cf9-150a-4f56-98eb-9d21455724cf',
+          name: 'Aisyah Admin'
+        })
+      });
 
-      if (adminError) {
-        setError(`Error menambahkan admin: ${adminError.message}`);
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error || 'Failed to add user as admin');
         return;
       }
 
@@ -114,7 +113,7 @@ export default function AddExistingUserPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <h1 className="text-2xl font-bold text-primary mb-2">Glass Design Hub</h1>
+            <h1 className="text-2xl font-bold text-primary mb-2">Jaya Sticker Indonesia</h1>
           </Link>
           <p className="text-muted-foreground">Tambah Admin Existing</p>
         </div>
@@ -233,7 +232,7 @@ export default function AddExistingUserPage() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-muted-foreground">
-          <p>© 2024 Glass Design Hub. All rights reserved.</p>
+          <p>© 2024 Jaya Sticker Indonesia. All rights reserved.</p>
         </div>
       </div>
     </div>

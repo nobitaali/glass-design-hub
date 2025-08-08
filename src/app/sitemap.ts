@@ -3,7 +3,7 @@ import { productService, blogService } from '@/lib/supabase'
 import { keywordsToTags } from '@/lib/utils'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.glassdesignhub.com'
+  const baseUrl = 'https://www.jayasticker.id'
   
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

@@ -83,7 +83,7 @@ VALUES ('${data.user.id}', 'Admin User', 'admin');`);
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <h1 className="text-2xl font-bold text-primary mb-2">Glass Design Hub</h1>
+            <h1 className="text-2xl font-bold text-primary mb-2">Jaya Sticker Indonesia</h1>
           </Link>
           <p className="text-muted-foreground">Admin Panel</p>
         </div>
@@ -115,7 +115,7 @@ VALUES ('${data.user.id}', 'Admin User', 'admin');`);
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@glassdesignhub.com"
+                    placeholder="admin@jayasticker.id"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-10"
@@ -169,7 +169,7 @@ VALUES ('${data.user.id}', 'Admin User', 'admin');`);
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-muted-foreground">
-          <p>© 2024 Glass Design Hub. All rights reserved.</p>
+          <p>© 2024 Jaya Sticker Indonesia. All rights reserved.</p>
         </div>
       </div>
     </div>

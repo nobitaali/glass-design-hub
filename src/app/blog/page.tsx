@@ -11,7 +11,7 @@ import { blogService, BlogPost } from "@/lib/supabase";
 
 // SEO Metadata yang dioptimalkan
 export const metadata: Metadata = {
-  title: "Blog Interior & Desain Rumah | Tips & Inspirasi Terbaru - Glass Design Hub",
+  title: "Blog Interior & Desain Rumah | Tips & Inspirasi Terbaru - Jaya Sticker Indonesia",
   description: "Temukan artikel terbaru tentang desain interior, tips dekorasi rumah, tren furniture, dan inspirasi ruang modern. Panduan lengkap untuk menciptakan rumah impian Anda.",
   keywords: [
     "blog interior",
@@ -25,17 +25,17 @@ export const metadata: Metadata = {
     "glass design",
     "interior indonesia"
   ],
-  authors: [{ name: "Glass Design Hub Team" }],
+  authors: [{ name: "Jaya Sticker Indonesia Team" }],
   openGraph: {
-    title: "Blog Interior & Desain Rumah | Glass Design Hub",
+    title: "Blog Interior & Desain Rumah | Jaya Sticker Indonesia",
     description: "Inspirasi dan tips terbaru untuk desain interior rumah modern",
     type: "website",
     locale: "id_ID",
-    siteName: "Glass Design Hub",
+    siteName: "Jaya Sticker Indonesia",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog Interior & Desain Rumah | Glass Design Hub",
+    title: "Blog Interior & Desain Rumah | Jaya Sticker Indonesia",
     description: "Inspirasi dan tips terbaru untuk desain interior rumah modern",
   },
   alternates: {

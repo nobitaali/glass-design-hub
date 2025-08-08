@@ -127,7 +127,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/" className="text-xl font-bold text-primary">
-                Glass Design Hub
+                Jaya Sticker Indonesia
               </Link>
               <Badge variant="secondary">Admin Panel</Badge>
             </div>

@@ -83,19 +83,17 @@ export default function EditBlogPostPage() {
 
   const loadPost = async () => {
     try {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('id', postId)
-        .single();
-
-      if (error || !data) {
-        setError("Artikel tidak ditemukan");
+      // Use API route to get post (bypasses RLS)
+      const response = await fetch(`/api/admin/blog/${postId}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || "Artikel tidak ditemukan");
         return;
       }
 
-      setFormData(data);
+      const result = await response.json();
+      setFormData(result.data);
     } catch (error) {
       console.error("Error loading post:", error);
       setError("Gagal memuat artikel");
@@ -196,16 +194,26 @@ export default function EditBlogPostPage() {
         published_at: publishNow ? new Date().toISOString() : formData.published_at
       };
 
-      const result = await blogService.updatePost(postId, updateData);
-      
-      if (result) {
-        setSuccess("Artikel berhasil diperbarui!");
-        setTimeout(() => {
-          router.push("/admin/blog");
-        }, 2000);
-      } else {
-        setError("Gagal memperbarui artikel");
+      // Use API route to update post (bypasses RLS)
+      const response = await fetch(`/api/admin/blog/${postId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error || 'Failed to update post');
+        return;
       }
+      
+      setSuccess("Artikel berhasil diperbarui!");
+      setTimeout(() => {
+        router.push("/admin/blog");
+      }, 2000);
     } catch (error) {
       console.error("Error updating post:", error);
       setError("Terjadi kesalahan saat memperbarui artikel");
