@@ -1,3 +1,14 @@
+-- Admin Users Table
+CREATE TABLE IF NOT EXISTS admin_users (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  name VARCHAR(100),
+  role VARCHAR(50) DEFAULT 'admin',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user_id)
+);
+
 -- Blog Categories Table
 CREATE TABLE IF NOT EXISTS blog_categories (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
