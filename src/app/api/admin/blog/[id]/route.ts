@@ -43,6 +43,74 @@ export async function GET(
   }
 }
 
+// POST - Create new blog post with specific ID
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { title, content, excerpt, status = 'draft', author_id } = await request.json()
+
+    if (!title || !content) {
+      return NextResponse.json(
+        { error: 'Title and content are required' },
+        { status: 400 }
+      )
+    }
+
+    // Check if post with this ID already exists
+    const { data: existingPost } = await supabaseAdmin
+      .from('blog_posts')
+      .select('id')
+      .eq('id', params.id)
+      .single()
+
+    if (existingPost) {
+      return NextResponse.json(
+        { error: 'Post with this ID already exists' },
+        { status: 409 }
+      )
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('blog_posts')
+      .insert([
+        {
+          id: params.id,
+          title,
+          content,
+          excerpt,
+          status,
+          author_id,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      ])
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Database error:', error)
+      return NextResponse.json(
+        { error: `Failed to create post: ${error.message}` },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      data
+    }, { status: 201 })
+
+  } catch (error) {
+    console.error('Create blog post error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
 // PUT - Update blog post
 export async function PUT(
   request: NextRequest,

@@ -44,17 +44,32 @@ export async function POST(request: NextRequest) {
   try {
     const postData = await request.json()
 
+    // Ensure required fields are present
+    if (!postData.title || !postData.content) {
+      return NextResponse.json(
+        { error: 'Title and content are required' },
+        { status: 400 }
+      )
+    }
+
+    // Set default values for fields that might be missing
+    const blogPost = {
+      ...postData,
+      views: 0,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      // Ensure author_id is set if not provided
+      author_id: postData.author_id || null
+    }
+
     const { data, error } = await supabaseAdmin
       .from('blog_posts')
-      .insert([{
-        ...postData,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }])
+      .insert([blogPost])
       .select()
       .single()
 
     if (error) {
+      console.error('Database error:', error)
       return NextResponse.json(
         { error: `Failed to create post: ${error.message}` },
         { status: 400 }

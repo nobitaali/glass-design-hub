@@ -32,6 +32,7 @@ export default function NewBlogPostPage() {
     content: "",
     author: "",
     author_bio: "",
+    author_id: "",
     category: "",
     tags: [] as string[],
     image_url: "",
@@ -97,10 +98,11 @@ export default function NewBlogPostPage() {
       return;
     }
 
-    // Set default author
+    // Set default author and author_id
     setFormData(prev => ({ 
       ...prev, 
-      author: profile.name || user.email?.split('@')[0] || 'Admin'
+      author: profile.name || user.email?.split('@')[0] || 'Admin',
+      author_id: user.id
     }));
   };
 
@@ -193,18 +195,28 @@ export default function NewBlogPostPage() {
       const postData = {
         ...formData,
         published: publishNow,
-        published_at: publishNow ? new Date().toISOString() : formData.published ? new Date().toISOString() : null
+        published_at: publishNow ? new Date().toISOString() : formData.published ? new Date().toISOString() : null,
+        status: publishNow ? 'published' : 'draft'
       };
 
-      const result = await blogService.createPost(postData);
+      // Use admin API route instead of direct Supabase client
+      const response = await fetch('/api/admin/blog', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      const result = await response.json();
       
-      if (result) {
+      if (response.ok && result.success) {
         setSuccess(`Artikel berhasil ${publishNow ? 'dipublikasi' : 'disimpan sebagai draft'}!`);
         setTimeout(() => {
           router.push("/admin/blog");
         }, 2000);
       } else {
-        setError("Gagal menyimpan artikel");
+        setError(result.error || "Gagal menyimpan artikel");
       }
     } catch (error) {
       console.error("Error saving post:", error);
