@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient,User } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
 // Create admin client with service role key
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
           )
         }
 
-        const existingUser = existingUsers.users.find(user => user?.email === email)
+        const existingUser = existingUsers.users.find((user: User)  => user?.email === email)
         
         if (!existingUser) {
           return NextResponse.json(
