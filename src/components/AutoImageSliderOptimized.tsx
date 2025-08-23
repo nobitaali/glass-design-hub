@@ -1,6 +1,6 @@
 "use client";
 
-import { Product, productService } from '@/lib/supabase';
+import { ProductSummary, productService } from '@/lib/supabase-optimized';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
@@ -17,11 +17,11 @@ const LoadingSkeleton = () => (
   </div>
 );
 
-const AutoImageSlider = () => {
+const AutoImageSliderOptimized = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductSummary[]>([]);
   const [imageLoadStates, setImageLoadStates] = useState<boolean[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -29,7 +29,7 @@ const AutoImageSlider = () => {
   const currentProduct = useMemo(() => products[currentIndex], [products, currentIndex]);
 
   // Optimized image preloading
-  const preloadImages = useCallback((products: Product[]) => {
+  const preloadImages = useCallback((products: ProductSummary[]) => {
     const loadStates = new Array(products.length).fill(false);
     setImageLoadStates(loadStates);
 
@@ -276,4 +276,4 @@ const AutoImageSlider = () => {
   );
 };
 
-export default AutoImageSlider;
+export default AutoImageSliderOptimized;

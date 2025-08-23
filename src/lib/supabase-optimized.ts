@@ -5,7 +5,20 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Types for our database
+// Lightweight product interface for client-side (only essential data)
+export interface ProductSummary {
+  id: string
+  slug: string
+  title: string
+  description: string
+  category: string
+  image_url: string
+  price: string
+  features: string[]
+  created_at: string
+}
+
+// Full product interface (for server-side or detailed views)
 export interface Product {
   additional_images: any[]
   id: string
@@ -59,15 +72,15 @@ export interface BlogCategory {
   updated_at: string
 }
 
-
 // Cache for products to reduce API calls
-const productCache = new Map<string, { data: Product[], timestamp: number }>();
+const productCache = new Map<string, { data: ProductSummary[], timestamp: number }>();
+const fullProductCache = new Map<string, { data: Product, timestamp: number }>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// Product service functions
+// Optimized Product service functions
 export const productService = {
-  // Get all products with caching
-  async getAllProducts(): Promise<Product[]> {
+  // Get products summary - only essential data for listings/sliders
+  async getAllProducts(): Promise<ProductSummary[]> {
     const cacheKey = 'all-products';
     const cached = productCache.get(cacheKey);
     
@@ -79,7 +92,7 @@ export const productService = {
     try {
       const { data, error } = await supabase
         .from('products')
-        .select('*')
+        .select('id, slug, title, description, category, image_url, price, features, created_at')
         .order('created_at', { ascending: false })
         .limit(10); // Limit for better performance
 
@@ -103,133 +116,201 @@ export const productService = {
     }
   },
 
-  // Get products by category
-  async getProductsByCategory(category: string): Promise<Product[]> {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('category', category)
-      .order('created_at', { ascending: false })
-
-    if (error) {
-      console.error('Error fetching products by category:', error)
-      return []
-    }
-
-    return data || []
-  },
-
-  // Get product by slug
+  // Get full product details - only when needed (for individual product pages)
   async getProductBySlug(slug: string): Promise<Product | null> {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('slug', slug)
-      .single()
-
-    if (error) {
-      console.error('Error fetching product by slug:', error)
-      return null
+    const cacheKey = `product-${slug}`;
+    const cached = fullProductCache.get(cacheKey);
+    
+    // Return cached data if still valid
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+      return cached.data;
     }
 
-    return data
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+
+      if (error) {
+        console.error('Error fetching product by slug:', error);
+        return null;
+      }
+
+      // Cache the full product
+      if (data) {
+        fullProductCache.set(cacheKey, {
+          data: data,
+          timestamp: Date.now()
+        });
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Network error fetching product:', error);
+      return null;
+    }
   },
 
-  // Get all product slugs (for sitemap generation)
+  // Get products by category - lightweight version
+  async getProductsByCategory(category: string): Promise<ProductSummary[]> {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('id, slug, title, description, category, image_url, price, features, created_at')
+        .eq('category', category)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (error) {
+        console.error('Error fetching products by category:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Network error fetching products by category:', error);
+      return [];
+    }
+  },
+
+  // Get all product slugs (for sitemap generation) - minimal data
   async getAllProductSlugs(): Promise<string[]> {
-    const { data, error } = await supabase
-      .from('products')
-      .select('slug')
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('slug');
 
-    if (error) {
-      console.error('Error fetching product slugs:', error)
-      return []
+      if (error) {
+        console.error('Error fetching product slugs:', error);
+        return [];
+      }
+
+      return data?.map(item => item.slug) || [];
+    } catch (error) {
+      console.error('Network error fetching product slugs:', error);
+      return [];
     }
-
-    return data?.map(item => item.slug) || []
   },
 
-  // Get all categories
+  // Get all categories - minimal data
   async getAllCategories(): Promise<string[]> {
-    const { data, error } = await supabase
-      .from('products')
-      .select('category')
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('category');
 
-    if (error) {
-      console.error('Error fetching categories:', error)
-      return []
+      if (error) {
+        console.error('Error fetching categories:', error);
+        return [];
+      }
+
+      const categories = Array.from(new Set(data?.map(item => item.category) || []));
+      return categories;
+    } catch (error) {
+      console.error('Network error fetching categories:', error);
+      return [];
     }
-
-    const categories = Array.from(new Set(data?.map(item => item.category) || []))
-    return categories
   },
 
-  // Get products by tag
-  async getProductsByTag(tag: string): Promise<Product[]> {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .textSearch('seo_keywords', tag.replace(/-/g, ' '))
-      .order('created_at', { ascending: false })
+  // Get products by tag - lightweight version
+  async getProductsByTag(tag: string): Promise<ProductSummary[]> {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('id, slug, title, description, category, image_url, price, features, created_at')
+        .textSearch('seo_keywords', tag.replace(/-/g, ' '))
+        .order('created_at', { ascending: false })
+        .limit(20);
 
-    if (error) {
-      console.error('Error fetching products by tag:', error)
-      return []
+      if (error) {
+        console.error('Error fetching products by tag:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Network error fetching products by tag:', error);
+      return [];
     }
-
-    return data || []
   },
 
-  // Create new product (for admin)
+  // Admin functions - full data access
   async createProduct(product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<Product | null> {
-    const { data, error } = await supabase
-      .from('products')
-      .insert([product])
-      .select()
-      .single()
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert([product])
+        .select()
+        .single();
 
-    if (error) {
-      console.error('Error creating product:', error)
-      return null
+      if (error) {
+        console.error('Error creating product:', error);
+        return null;
+      }
+
+      // Clear cache when data changes
+      productCache.clear();
+      fullProductCache.clear();
+
+      return data;
+    } catch (error) {
+      console.error('Network error creating product:', error);
+      return null;
     }
-
-    return data
   },
 
-  // Update product (for admin)
   async updateProduct(id: string, updates: Partial<Product>): Promise<Product | null> {
-    const { data, error } = await supabase
-      .from('products')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single()
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
 
-    if (error) {
-      console.error('Error updating product:', error)
-      return null
+      if (error) {
+        console.error('Error updating product:', error);
+        return null;
+      }
+
+      // Clear cache when data changes
+      productCache.clear();
+      fullProductCache.clear();
+
+      return data;
+    } catch (error) {
+      console.error('Network error updating product:', error);
+      return null;
     }
-
-    return data
   },
 
-  // Delete product (for admin)
   async deleteProduct(id: string): Promise<boolean> {
-    const { error } = await supabase
-      .from('products')
-      .delete()
-      .eq('id', id)
+    try {
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', id);
 
-    if (error) {
-      console.error('Error deleting product:', error)
-      return false
+      if (error) {
+        console.error('Error deleting product:', error);
+        return false;
+      }
+
+      // Clear cache when data changes
+      productCache.clear();
+      fullProductCache.clear();
+
+      return true;
+    } catch (error) {
+      console.error('Network error deleting product:', error);
+      return false;
     }
-
-    return true
   }
-}
+};
 
-// Blog service functions
+// Blog service functions (keeping existing functionality)
 export const blogService = {
   // Get all published blog posts
   async getAllPosts(limit?: number): Promise<BlogPost[]> {

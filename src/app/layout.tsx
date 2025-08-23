@@ -90,33 +90,33 @@ export default function RootLayout({
         {/* Performance-optimized resource hints */}
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://hyztwerpkhopdcsenbsn.supabase.co" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         
         <meta name="google-site-verification" content="Z4jQZ-VVe8LrGUuWK1404dn7o6-tnNeQvmf-pLytdWQ" />
 
-        {/* Optimized script loading */}
+        {/* Optimized script loading - defer analytics to improve performance */}
         {analitics==="true"&& 
         <Script
           id="google-analytics"
-          strategy="worker"
+          strategy="afterInteractive"
           src={`https://www.googletagmanager.com/gtag/js?id=G-91VW4NNVRS`}
         />
-        
-        
         }
 
         {analitics==="true"&&<Script
           id="gtag-init"
-          strategy="worker"
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              if (!self.gtag) {
-                self.dataLayer = self.dataLayer || [];
-                function gtag(){self.dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-91VW4NNVRS');
-              }
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-91VW4NNVRS', {
+                page_title: document.title,
+                page_location: window.location.href
+              });
             `,
           }}
         />}
