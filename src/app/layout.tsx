@@ -7,6 +7,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ReactQueryProvider } from "./providers";
 import { ThemeProvider } from "next-themes";
+import PerformanceMonitor, { ResourceHints } from "@/components/PerformanceMonitor";
 const analitics = process.env.NEXT_PUBLIC_ENABLE_GA_TRACKING!
 const inter = Inter({ 
   subsets: ["latin"],
@@ -87,12 +88,8 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
-        {/* Performance-optimized resource hints */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://hyztwerpkhopdcsenbsn.supabase.co" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        {/* Enhanced resource hints for better performance */}
+        <ResourceHints />
         
         <meta name="google-site-verification" content="Z4jQZ-VVe8LrGUuWK1404dn7o6-tnNeQvmf-pLytdWQ" />
 
@@ -185,6 +182,7 @@ export default function RootLayout({
               {children}
               <Toaster />
               <Sonner />
+              <PerformanceMonitor />
             </TooltipProvider>
           </ThemeProvider>
         </ReactQueryProvider>

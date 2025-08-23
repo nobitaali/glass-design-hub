@@ -2,123 +2,93 @@
 
 import { useEffect } from 'react';
 
-// Declare gtag function type
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
-  }
-}
-
-const PerformanceMonitor = () => {
+// Web Vitals monitoring
+export default function PerformanceMonitor() {
   useEffect(() => {
-    // Only run in production and in browser
-    if (process.env.NODE_ENV !== 'production' || typeof window === 'undefined') {
-      return;
+    // Only run in production
+    if (process.env.NODE_ENV !== 'production') return;
+
+    // Dynamic import to avoid loading in development
+    import('web-vitals').then((webVitals) => {
+      // Core Web Vitals
+      if (webVitals.onCLS) webVitals.onCLS(console.log);
+      if (webVitals.onFID) webVitals.onFID(console.log);
+      if (webVitals.onFCP) webVitals.onFCP(console.log);
+      if (webVitals.onLCP) webVitals.onLCP(console.log);
+      if (webVitals.onTTFB) webVitals.onTTFB(console.log);
+    }).catch(() => {
+      // Silently fail if web-vitals is not available
+    });
+
+    // Performance observer for additional metrics
+    if ('PerformanceObserver' in window) {
+      try {
+        // Observe layout shifts
+        const clsObserver = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === 'layout-shift' && !(entry as any).hadRecentInput) {
+              console.log('Layout Shift:', entry);
+            }
+          }
+        });
+        clsObserver.observe({ entryTypes: ['layout-shift'] });
+
+        // Observe long tasks
+        const longTaskObserver = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.duration > 50) {
+              console.log('Long Task:', entry);
+            }
+          }
+        });
+        longTaskObserver.observe({ entryTypes: ['longtask'] });
+
+        // Observe largest contentful paint
+        const lcpObserver = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            console.log('LCP:', entry);
+          }
+        });
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+
+        // Cleanup observers
+        return () => {
+          clsObserver.disconnect();
+          longTaskObserver.disconnect();
+          lcpObserver.disconnect();
+        };
+      } catch (error) {
+        console.warn('Performance monitoring setup failed:', error);
+      }
     }
-
-    // Web Vitals monitoring
-    const observeWebVitals = () => {
-      // Largest Contentful Paint (LCP)
-      const lcpObserver = new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1];
-        
-        // Send to analytics or console
-        console.log('LCP:', lastEntry.startTime);
-        
-        // You can send this to your analytics service
-        if (typeof window.gtag !== 'undefined') {
-          window.gtag('event', 'web_vitals', {
-            name: 'LCP',
-            value: Math.round(lastEntry.startTime),
-            event_category: 'Web Vitals'
-          });
-        }
-      });
-
-      if ('PerformanceObserver' in window) {
-        lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
-      }
-
-      // First Input Delay (FID)
-      const fidObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          const fid = (entry as any).processingStart - entry.startTime;
-          console.log('FID:', fid);
-          
-          if (typeof window.gtag !== 'undefined') {
-            window.gtag('event', 'web_vitals', {
-              name: 'FID',
-              value: Math.round(fid),
-              event_category: 'Web Vitals'
-            });
-          }
-        }
-      });
-
-      if ('PerformanceObserver' in window) {
-        fidObserver.observe({ type: 'first-input', buffered: true });
-      }
-
-      // Cumulative Layout Shift (CLS)
-      let clsValue = 0;
-      const clsObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (!(entry as any).hadRecentInput) {
-            clsValue += (entry as any).value;
-          }
-        }
-        
-        console.log('CLS:', clsValue);
-        
-        if (typeof window.gtag !== 'undefined') {
-          window.gtag('event', 'web_vitals', {
-            name: 'CLS',
-            value: Math.round(clsValue * 1000),
-            event_category: 'Web Vitals'
-          });
-        }
-      });
-
-      if ('PerformanceObserver' in window) {
-        clsObserver.observe({ type: 'layout-shift', buffered: true });
-      }
-    };
-
-    // Resource loading performance
-    const observeResourceTiming = () => {
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          const resource = entry as PerformanceResourceTiming;
-          
-          // Monitor slow resources
-          if (resource.duration > 1000) {
-            console.warn('Slow resource:', resource.name, resource.duration);
-          }
-          
-          // Monitor large resources
-          if (resource.transferSize && resource.transferSize > 500000) {
-            console.warn('Large resource:', resource.name, resource.transferSize);
-          }
-        }
-      });
-
-      if ('PerformanceObserver' in window) {
-        observer.observe({ type: 'resource', buffered: true });
-      }
-    };
-
-    // Initialize monitoring
-    observeWebVitals();
-    observeResourceTiming();
-
-    // Cleanup
-    return () => {
-      // Observers are automatically cleaned up when component unmounts
-    };
   }, []);
 
-  return null; // This component doesn't render anything
-};
+  return null;
+}
 
-export default PerformanceMonitor;
+// Resource hints component
+export function ResourceHints() {
+  return (
+    <>
+      {/* DNS prefetch for external domains */}
+      <link rel="dns-prefetch" href="//hyztwerpkhopdcsenbsn.supabase.co" />
+      <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+      <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+      <link rel="dns-prefetch" href="//maps.googleapis.com" />
+      
+      {/* Preconnect to critical origins */}
+      <link rel="preconnect" href="https://hyztwerpkhopdcsenbsn.supabase.co" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      
+      {/* Preload critical resources */}
+      <link
+        rel="preload"
+        href="/fonts/inter-var.woff2"
+        as="font"
+        type="font/woff2"
+        crossOrigin=""
+      />
+    </>
+  );
+}

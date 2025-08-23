@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Eye } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import QuoteRequestButton from "@/components/QuoteRequestButton";
+import { ProductImage } from "@/components/OptimizedImage";
 import { Product } from "@/lib/supabase";
 
 interface ProductCardProps {
@@ -15,24 +15,18 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="group hover:shadow-lg group flex flex-col h-full justify-between transition-all duration-300 hover:-translate-y-1 overflow-hidden critical-render">
-      <div className="relative h-48 overflow-hidden">
-        <Image 
+      <div className="relative h-48 overflow-hidden" role="img" aria-label={`${product.title} product image`}>
+        <ProductImage 
           src={product.image_url} 
-          alt={product.title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          priority={false}
-          loading="lazy"
-          placeholder="blur"
-          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          alt={`${product.title} - ${product.category} product`}
+          className="group-hover:scale-105 transition-transform duration-300"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground">
+        <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground" aria-label={`Category: ${product.category}`}>
           {product.category}
         </Badge>
         {product.price && (
-          <div className="absolute bottom-3 left-3 text-white font-bold text-lg">
+          <div className="absolute bottom-3 left-3 text-white font-bold text-lg" aria-label={`Price: ${product.price}`}>
             {product.price}
           </div>
         )}

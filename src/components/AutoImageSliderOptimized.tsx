@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductSummary, productService } from '@/lib/supabase-optimized';
-import Image from 'next/image';
+import { HeroImage } from '@/components/OptimizedImage';
 import Link from 'next/link';
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 
@@ -171,27 +171,10 @@ const AutoImageSliderOptimized = () => {
                 willChange: index === currentIndex ? 'opacity' : 'auto',
               }}
             >
-              <Image
+              <HeroImage
                 src={product.image_url}
-                alt={product.title}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px"
-                fill
+                alt={`${product.title} - Featured product showcase`}
                 className="object-cover"
-                loading={index <= 1 ? "eager" : "lazy"}
-                priority={index === 0}
-                quality={index === currentIndex ? 80 : 60}
-                placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyEkliVYyDoAAD8Cq9vBa2+eI/tHuIyTqdOp5jgWJpnrCKvwkJAVJM8r3lBmcTJnNvv+8CqsVZFHYzZQovR9Qs3uYUlUotZpF7VMMM0ijF9sctEuRYeYrlR2gEqCsZYgSQ3qvVUxVTdnqhFCKfGXNy/llkX/KMWWTVMzpNJ3ORhjqBAzSrQFTELBHaIDJqJDNKQDNKhADMzNNJJJJMzNKSTS"
-                onLoad={() => {
-                  if (index === currentIndex) {
-                    // Trigger layout shift prevention
-                    const element = document.querySelector(`[data-slide="${index}"]`);
-                    if (element) {
-                      element.setAttribute('data-loaded', 'true');
-                    }
-                  }
-                }}
-                data-slide={index}
               />
 
               {/* Optimized overlay gradient */}
@@ -209,32 +192,34 @@ const AutoImageSliderOptimized = () => {
                 {currentProduct?.description}
               </p>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 max-w-md">
-                <Link href={`/product/${currentProduct?.slug}`} className="inline-block">
-                  <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 md:px-8 py-2 md:py-3 rounded-full font-semibold transition-colors duration-200 text-sm md:text-base">
-                    Cek Sekarang
-                  </button>
+                <Link 
+                  href={`/product/${currentProduct?.slug}`} 
+                  className="inline-block w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 md:px-8 py-3 md:py-4 rounded-full font-semibold transition-colors duration-200 text-sm md:text-base text-center min-h-[44px] flex items-center justify-center"
+                  aria-label={`View details for ${currentProduct?.title}`}
+                >
+                  Cek Sekarang
                 </Link>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Optimized Navigation Buttons */}
+        {/* Optimized Navigation Buttons with better touch targets */}
         <button
           onClick={goToPrevious}
-          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-2 md:p-3 rounded-full transition-all z-10 group"
-          aria-label="Previous slide"
+          className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-3 md:p-4 rounded-full transition-all z-10 group min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label={`Previous slide - Go to ${products[(currentIndex - 1 + products.length) % products.length]?.title || 'previous product'}`}
         >
-          <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
         <button
           onClick={goToNext}
-          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-2 md:p-3 rounded-full transition-all z-10 group"
-          aria-label="Next slide"
+          className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 backdrop-blur-sm text-white p-3 md:p-4 rounded-full transition-all z-10 group min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label={`Next slide - Go to ${products[(currentIndex + 1) % products.length]?.title || 'next product'}`}
         >
-          <svg className="w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -257,19 +242,27 @@ const AutoImageSliderOptimized = () => {
         )}
       </div>
 
-      {/* Optimized Dots Indicator */}
-      <div className="flex justify-center gap-2 z-10">
-        {products.map((_, index) => (
+      {/* Optimized Dots Indicator with better touch targets */}
+      <div className="flex justify-center gap-1 z-10" role="tablist" aria-label="Slide navigation">
+        {products.map((product, index) => (
           <button
             key={`dot-${index}`}
             onClick={() => goToSlide(index)}
-            className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-200 ${
+            className={`p-2 rounded-full transition-all duration-200 min-w-[44px] min-h-[44px] flex items-center justify-center ${
+              index === currentIndex
+                ? 'bg-blue-100'
+                : 'hover:bg-gray-100'
+            }`}
+            role="tab"
+            aria-selected={index === currentIndex}
+            aria-label={`Go to slide ${index + 1}: ${product.title}`}
+          >
+            <div className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-200 ${
               index === currentIndex
                 ? 'bg-blue-600 scale-125'
-                : 'bg-gray-400 hover:bg-gray-600'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
+                : 'bg-gray-400'
+            }`} />
+          </button>
         ))}
       </div>
     </div>
