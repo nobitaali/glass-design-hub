@@ -3,22 +3,6 @@
 // Preload critical resources
 export const preloadCriticalResources = () => {
   if (typeof window !== 'undefined') {
-    // Preload critical fonts
-    const fontPreloads = [
-      '/fonts/inter-var.woff2',
-      '/fonts/inter-var-latin.woff2'
-    ];
-
-    fontPreloads.forEach(font => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.href = font;
-      link.as = 'font';
-      link.type = 'font/woff2';
-      link.crossOrigin = 'anonymous';
-      document.head.appendChild(link);
-    });
-
     // Preconnect to external domains
     const preconnectDomains = [
       'https://hyztwerpkhopdcsenbsn.supabase.co',
