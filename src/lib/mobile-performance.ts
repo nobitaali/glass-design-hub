@@ -156,10 +156,9 @@ export function preloadCriticalMobileResources() {
   const isMobile = window.innerWidth < 768
   
   if (isMobile) {
-    // Preload critical mobile resources
+    // Critical mobile resources (fonts are handled by Next.js font optimization)
     const criticalResources = [
-      '/fonts/inter-var.woff2',
-      // Add other critical mobile resources
+      // Add other critical mobile resources as needed
     ]
 
     criticalResources.forEach(resource => {
