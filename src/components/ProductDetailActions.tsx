@@ -83,7 +83,7 @@ Mohon penawaran resmi dan lengkap untuk project ini. Terima kasih! 📋`;
 
   return (
     <div className="flex flex-col gap-3">
-      <Button onClick={handleWhatsAppClick} className="bg-green-500 hover:bg-green-600 w-full">
+      <Button onClick={handleWhatsAppClick} title="penawaran" className="bg-green-500 hover:bg-green-600 w-full">
         <MessageCircle className="h-4 w-4 mr-2" />
         💬 Konsultasi Gratis
       </Button>
