@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import HeroOptimized from "@/components/HeroOptimized";
+import MobileHero from "@/components/MobileHero";
 import { 
   LazyProductCatalog, 
   LazyCustomDesign, 
@@ -9,8 +10,18 @@ import {
   CriticalSection,
   LazySection
 } from "@/components/LazyComponents";
+import { productService } from "@/lib/supabase-optimized";
 
-export default function Home() {
+export default async function Home() {
+  // Fetch products for hero slider
+  let products = [];
+  try {
+    const fetchedProducts = await productService.getAllProducts();
+    products = fetchedProducts.slice(0, 5); // Limit to 5 for performance
+  } catch (error) {
+    console.error('Failed to fetch products for hero:', error);
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Critical above-the-fold content */}

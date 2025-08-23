@@ -23,7 +23,7 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 86400, // 24 hours cache
-    deviceSizes: [640, 750, 828, 1080, 1200], // Optimized sizes
+    deviceSizes: [320, 420, 640, 750, 828, 1080, 1200], // Mobile-first sizes
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     dangerouslyAllowSVG: false,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

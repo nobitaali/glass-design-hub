@@ -149,7 +149,7 @@ export default function RootLayout({
                 "@type": "Country",
                 "name": "Indonesia"
               },
-              "priceRange": "$$",
+              "priceRange": "$",
               "openingHours": "Mo-Su 00:00-23:59",
               "aggregateRating": {
                 "@type": "AggregateRating",
@@ -167,6 +167,29 @@ export default function RootLayout({
               },
              
             })
+          }}
+        />
+
+        {/* Mobile performance monitoring */}
+        <Script
+          id="mobile-performance"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                  // Mobile-specific performance monitoring
+                  const script = document.createElement('script');
+                  script.type = 'module';
+                  script.textContent = \`
+                    import { initMobilePerformanceMonitoring, preloadCriticalMobileResources } from '/src/lib/mobile-performance.js';
+                    initMobilePerformanceMonitoring();
+                    preloadCriticalMobileResources();
+                  \`;
+                  document.head.appendChild(script);
+                }
+              })();
+            `,
           }}
         />
       </head>

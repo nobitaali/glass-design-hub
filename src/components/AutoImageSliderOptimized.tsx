@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductSummary, productService } from '@/lib/supabase-optimized';
-import { HeroImage } from '@/components/OptimizedImage';
+import { MobileOptimizedImage } from '@/components/MobileOptimizedImage';
 import Link from 'next/link';
 import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 
@@ -23,6 +23,8 @@ const AutoImageSliderOptimized = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [products, setProducts] = useState<ProductSummary[]>([]);
   const [imageLoadStates, setImageLoadStates] = useState<boolean[]>([]);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Memoize current product untuk mencegah re-render
@@ -74,6 +76,34 @@ const AutoImageSliderOptimized = () => {
   const goToNext = useCallback(() => {
     setCurrentIndex(prev => (prev + 1) % products.length);
   }, [products.length]);
+
+  // Touch handlers for mobile swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+    setIsPaused(true); // Pause auto-play on touch
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && currentIndex < products.length - 1) {
+      goToNext();
+    }
+    if (isRightSwipe && currentIndex > 0) {
+      goToPrevious();
+    }
+
+    // Resume auto-play after 3 seconds
+    setTimeout(() => setIsPaused(false), 3000);
+  };
 
   // Optimized auto slide with better cleanup
   useEffect(() => {
@@ -158,6 +188,9 @@ const AutoImageSliderOptimized = () => {
         className="relative w-full h-[50vh] md:h-[60vh] max-h-[600px] min-h-[300px] md:min-h-[400px] overflow-hidden rounded-lg"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Image Container with optimized rendering */}
         <div className="relative w-full h-full">
@@ -171,10 +204,11 @@ const AutoImageSliderOptimized = () => {
                 willChange: index === currentIndex ? 'opacity' : 'auto',
               }}
             >
-              <HeroImage
+              <MobileOptimizedImage
                 src={product.image_url}
                 alt={`${product.title} - Featured product showcase`}
-                className="object-cover"
+                className="w-full h-full"
+                priority={index === 0}
               />
 
               {/* Optimized overlay gradient */}
