@@ -100,13 +100,14 @@ const nextConfig = {
     ];
   },
 
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-  },
+
   
   productionBrowserSourceMaps: false,
   optimizeFonts: true,
   swcMinify: true,
+   compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
   compress: true,
   reactStrictMode: true,
   poweredByHeader: false,

@@ -4,64 +4,57 @@ import { useEffect } from 'react';
 
 // Web Vitals monitoring
 export default function PerformanceMonitor() {
-  useEffect(() => {
-    // Only run in production
-    if (process.env.NODE_ENV !== 'production') return;
+useEffect(() => {
+  // Hanya jalan di development
+  if (process.env.NODE_ENV !== 'development') return;
 
-    // Dynamic import to avoid loading in development
-    import('web-vitals').then((webVitals) => {
-      // Core Web Vitals
-      if (webVitals.onCLS) webVitals.onCLS(console.log);
-      if (webVitals.onFID) webVitals.onFID(console.log);
-      if (webVitals.onFCP) webVitals.onFCP(console.log);
-      if (webVitals.onLCP) webVitals.onLCP(console.log);
-      if (webVitals.onTTFB) webVitals.onTTFB(console.log);
-    }).catch(() => {
-      // Silently fail if web-vitals is not available
-    });
+  import('web-vitals').then((webVitals) => {
+    if (webVitals.onCLS) webVitals.onCLS(console.log);
+    if (webVitals.onFID) webVitals.onFID(console.log);
+    if (webVitals.onFCP) webVitals.onFCP(console.log);
+    if (webVitals.onLCP) webVitals.onLCP(console.log);
+    if (webVitals.onTTFB) webVitals.onTTFB(console.log);
+  }).catch(() => {});
 
-    // Performance observer for additional metrics
-    if ('PerformanceObserver' in window) {
-      try {
-        // Observe layout shifts
-        const clsObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.entryType === 'layout-shift' && !(entry as any).hadRecentInput) {
-              console.log('Layout Shift:', entry);
-            }
+  // Observers untuk dev only
+  if ('PerformanceObserver' in window) {
+    try {
+      const clsObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'layout-shift' && !(entry as any).hadRecentInput) {
+            console.log('Layout Shift:', entry);
           }
-        });
-        clsObserver.observe({ entryTypes: ['layout-shift'] });
+        }
+      });
+      clsObserver.observe({ entryTypes: ['layout-shift'] });
 
-        // Observe long tasks
-        const longTaskObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            if (entry.duration > 50) {
-              console.log('Long Task:', entry);
-            }
+      const longTaskObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.duration > 50) {
+            console.log('Long Task:', entry);
           }
-        });
-        longTaskObserver.observe({ entryTypes: ['longtask'] });
+        }
+      });
+      longTaskObserver.observe({ entryTypes: ['longtask'] });
 
-        // Observe largest contentful paint
-        const lcpObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            console.log('LCP:', entry);
-          }
-        });
-        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+      const lcpObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          console.log('LCP:', entry);
+        }
+      });
+      lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
 
-        // Cleanup observers
-        return () => {
-          clsObserver.disconnect();
-          longTaskObserver.disconnect();
-          lcpObserver.disconnect();
-        };
-      } catch (error) {
-        console.warn('Performance monitoring setup failed:', error);
-      }
+      return () => {
+        clsObserver.disconnect();
+        longTaskObserver.disconnect();
+        lcpObserver.disconnect();
+      };
+    } catch (error) {
+      console.warn('Performance monitoring setup failed:', error);
     }
-  }, []);
+  }
+}, []);
+
 
   return null;
 }
