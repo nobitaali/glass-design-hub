@@ -361,7 +361,7 @@ export const blogService = {
 
     if (typeof window === 'undefined') {
       const cachedFetcher = createCachedFetcher(fetcher, ['blog', 'posts'], 600);
-      return cachedFetcher(limit);
+      return cachedFetcher();
     } else {
       return fetcher(limit);
     }
