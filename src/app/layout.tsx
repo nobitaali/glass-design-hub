@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
-  title: "Kaca Film | Sandblast Jogja | Interior Solutions | Stiker Gedung | Jaya Sticker Custom",
+  title: "Kaca Film & Sandblast Jogja | Jaya Sticker Custom",
   description: "Spesialis kaca film, sandblast & stiker dekoratif Yogyakarta. Pemasangan profesional seluruh Indonesia. Garansi resmi, harga terjangkau!",
   keywords: "kaca film jogja, sandblast jogja, stiker dekoratif jogja, kaca film mobil jogja, kaca film rumah jogja, sandblast motif, stiker vinyl jogja, interior design jogja, kaca film hitam, kaca film silver, stiker tembok, one way vision, cutting sticker, reflektor, pemasangan kaca film jogja, jasa sandblast jogja, dekorasi interior, privasi kaca, anti panas, UV protection, kaca film murah jogja, sandblast murah jogja",
   authors: [{ name: "Interior Solutions Indonesia" }],
@@ -190,6 +190,85 @@ export default function RootLayout({
                 }
               })();
             `,
+          }}
+        />
+
+        {/* FAQ Schema */}
+        <Script
+          id="faq-schema"
+          type="application/ld+json"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [
+                {
+                  "@type": "Question",
+                  "name": "Berapa lama proses pemasangan kaca film?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Proses pemasangan kaca film untuk mobil biasanya memakan waktu 2-3 jam, sedangkan untuk rumah atau kantor tergantung luas area kaca yang akan dipasang, biasanya 1-2 hari untuk area yang luas."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Apakah kaca film yang Anda jual bergaransi?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Ya, semua produk kaca film kami dilengkapi garansi resmi. Garansi dapat mencakup 1-5 tahun tergantung jenis kaca film yang dipilih. Garansi mencakup pengelupasan, perubahan warna, dan kerusakan akibat cacat produksi."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Apakah Anda melayani pemasangan di luar Yogyakarta?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Ya, kami melayani pemasangan kaca film dan stiker ke seluruh Indonesia. Untuk area luar Yogyakarta, kami dapat mengirimkan produk dengan panduan instalasi atau menghubungkan Anda dengan mitra pemasangan kami di area tersebut."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Bagaimana cara merawat kaca film agar tahan lama?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Untuk merawat kaca film agar tahan lama: hindari membersihkan kaca dalam 7 hari pertama setelah pemasangan, gunakan kain microfiber dan pembersih kaca non-ammonia, hindari penggunaan benda tajam di dekat kaca film, dan hindari menempel stiker langsung pada kaca film."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Berapa harga kaca film per meter persegi?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Harga kaca film bervariasi tergantung jenis dan kualitas, mulai dari Rp 100.000 hingga Rp 500.000 per meter persegi. Untuk kaca film mobil berkisar Rp 1.500.000 hingga Rp 5.000.000 per unit tergantung jenis kendaraan dan kualitas kaca film."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Apakah sandblast bisa dicustom motif sesuai keinginan?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Ya, kami menerima custom design untuk stiker sandblast. Anda bisa mengirimkan desain sendiri atau berkonsultasi dengan tim desain kami untuk membuat motif yang sesuai dengan kebutuhan dan tema interior Anda."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Apakah cutting sticker bisa dilepas tanpa merusak permukaan?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Cutting sticker oracal yang kami gunakan dapat dilepas tanpa merusak permukaan jika dilepas dengan cara yang benar. Namun, untuk pemasangan jangka panjang lebih dari 1 tahun, kemungkinan ada residu yang perlu dibersihkan dengan pembersih khusus."
+                  }
+                },
+                {
+                  "@type": "Question",
+                  "name": "Apakah Anda menyediakan layanan survey lokasi?",
+                  "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Ya, kami menyediakan layanan survey lokasi gratis untuk area Yogyakarta dan sekitarnya. Tim kami akan datang ke lokasi untuk mengukur dan memberikan rekomendasi terbaik untuk kebutuhan kaca film atau stiker Anda."
+                  }
+                }
+              ]
+            })
           }}
         />
       </head>

@@ -9,6 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { CalendarDays, Clock, User, ArrowRight } from "lucide-react";
 import { blogService, BlogPost } from "@/lib/supabase";
 
+// ISR: Revalidate blog page every 10 minutes
+export const revalidate = 600;
+
 // SEO Metadata yang dioptimalkan
 export const metadata: Metadata = {
   title: "Blog Interior & Desain Rumah | Tips & Inspirasi Terbaru - Jaya Sticker Indonesia",

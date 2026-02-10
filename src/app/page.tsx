@@ -1,78 +1,52 @@
 import Header from "@/components/Header";
 import HeroOptimized from "@/components/HeroOptimized";
-import MobileHero from "@/components/MobileHero";
-import { 
-  LazyProductCatalog, 
-  LazyCustomDesign, 
-  LazyGoogleMaps, 
-  LazyFooter, 
-  LazyWhatsAppFloat,
-  CriticalSection,
-  LazySection
-} from "@/components/LazyComponents";
+import Footer from "@/components/Footer";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
+import ProductCatalog from "@/components/ProductCatalog";
+import CustomDesign from "@/components/CustomDesign";
+import GoogleMaps from "@/components/GoogleMaps";
 import { productService } from "@/lib/supabase-optimized";
+ 
+// ISR: Revalidate every 5 minutes for optimal performance
+export const revalidate = 300;
 
+// Static metadata for home page
+export const metadata = {
+  title: "Kaca Film & Sandblast Jogja | Jaya Sticker Custom",
+  description: "Spesialis kaca film, sandblast & stiker dekoratif Yogyakarta. Pemasangan profesional seluruh Indonesia. Garansi resmi, harga terjangkau!",
+};
+ 
 export default async function Home() {
-  // Fetch products for hero slider
+  // Fetch products for hero slider with error handling
   let products = [];
   try {
     const fetchedProducts = await productService.getAllProducts();
     products = fetchedProducts.slice(0, 5); // Limit to 5 for performance
   } catch (error) {
     console.error('Failed to fetch products for hero:', error);
+    // Continue with empty products array - UI will handle gracefully
   }
-
+ 
   return (
     <div className="min-h-screen bg-background">
       {/* Critical above-the-fold content */}
-      <CriticalSection>
-        <Header />
-        <HeroOptimized />
-      </CriticalSection>
+      <Header />
+      <HeroOptimized />
       
-      {/* Non-critical content with optimized lazy loading */}
-      <LazySection 
-        fallback={
-          <div className="min-h-[400px] flex items-center justify-center">
-            <div className="animate-pulse text-gray-500">Loading products...</div>
-          </div>
-        }
-      >
-        <LazyProductCatalog />
-      </LazySection>
+      {/* Product Catalog */}
+      <ProductCatalog />
       
-      <LazySection 
-        fallback={
-          <div className="min-h-[300px] flex items-center justify-center">
-            <div className="animate-pulse text-gray-500">Loading design section...</div>
-          </div>
-        }
-      >
-        <LazyCustomDesign />
-      </LazySection>
+      {/* Custom Design Section */}
+      <CustomDesign />
       
-      <LazySection 
-        fallback={
-          <div className="min-h-[400px] flex items-center justify-center bg-gray-100 rounded-lg">
-            <div className="animate-pulse text-gray-500">Loading map...</div>
-          </div>
-        }
-      >
-        <LazyGoogleMaps />
-      </LazySection>
+      {/* Google Maps */}
+      <GoogleMaps />
       
-      <LazySection 
-        fallback={
-          <div className="min-h-[200px] bg-gray-900 flex items-center justify-center">
-            <div className="animate-pulse text-gray-400">Loading footer...</div>
-          </div>
-        }
-      >
-        <LazyFooter />
-      </LazySection>
+      {/* Footer */}
+      <Footer />
       
       {/* WhatsApp float - loads immediately but doesn't block */}
-      <LazyWhatsAppFloat />
+      <WhatsAppFloat />
     </div>
   );
 }

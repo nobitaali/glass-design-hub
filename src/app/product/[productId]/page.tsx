@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -154,6 +155,14 @@ export default async function ProductDetail({ params }: ProductDetailProps) {
       <Header />
 
       <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumbs */}
+        <Breadcrumbs 
+          items={[
+            { label: product.category, href: `/tag/${product.category.toLowerCase().replace(/\s+/g, '-')}` },
+            { label: product.title, href: `/product/${product.slug}` }
+          ]}
+        />
+
         {/* Back Button */}
         <Link href="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" /> Kembali ke Katalog

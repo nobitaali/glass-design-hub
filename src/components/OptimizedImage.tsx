@@ -17,6 +17,7 @@ interface OptimizedImageProps {
   blurDataURL?: string;
   onLoad?: () => void;
   onError?: () => void;
+  unoptimized?: boolean;
 }
 
 // Generate a minimal blur data URL
@@ -48,7 +49,8 @@ export default function OptimizedImage({
   placeholder = 'blur',
   blurDataURL,
   onLoad,
-  onError
+  onError,
+  unoptimized = false
 }: OptimizedImageProps) {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,7 +91,8 @@ export default function OptimizedImage({
     onError: handleError,
     priority,
     sizes,
-    ...(fill ? { fill: true } : { width, height })
+    unoptimized,
+    ...(fill ? { fill: true, width: undefined, height: undefined } : { width, height })
   };
 
   return (
@@ -115,6 +118,9 @@ export function ProductImage({ src, alt, className = "" }: { src: string; alt: s
       className={`object-cover ${className}`}
       quality={80}
       priority={false}
+      unoptimized
+      width={undefined}
+      height={undefined}
     />
   );
 }
@@ -129,6 +135,7 @@ export function HeroImage({ src, alt, className = "" }: { src: string; alt: stri
       className={`object-cover ${className}`}
       quality={85}
       priority={true}
+      unoptimized
     />
   );
 }
@@ -154,6 +161,7 @@ export function ThumbnailImage({
       className={`object-cover ${className}`}
       quality={70}
       priority={false}
+      unoptimized
     />
   );
 }

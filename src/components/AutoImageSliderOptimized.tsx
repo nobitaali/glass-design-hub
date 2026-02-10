@@ -209,6 +209,7 @@ const AutoImageSliderOptimized = () => {
                 alt={`${product.title} - Featured product showcase`}
                 className="w-full h-full"
                 priority={index === 0}
+                fill={true}
               />
 
               {/* Optimized overlay gradient */}

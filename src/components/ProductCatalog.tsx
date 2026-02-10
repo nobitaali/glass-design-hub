@@ -1,81 +1,25 @@
-'use client';
-
-import { useState, useEffect, useMemo } from 'react';
-import { productService, Product } from "@/lib/supabase";
+import { Suspense } from 'react';
+import { productService, ProductSummary } from "@/lib/supabase-optimized";
 import { normalizeSlug } from "@/lib/utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard from "./ProductCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const PAGE_SIZE = 12;
+// Server Component - Data fetching
+async function ProductCatalogContent() {
+  const [products, categories] = await Promise.all([
+    productService.getAllProducts(),
+    productService.getAllCategories()
+  ]);
 
-export default function ProductCatalog() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    async function fetchProductData() {
-      try {
-        const [fetchedProducts, fetchedCategories] = await Promise.all([
-          productService.getAllProducts(),
-          productService.getAllCategories()
-        ]);
-        
-        setProducts(fetchedProducts);
-        setCategories(fetchedCategories);
-      } catch (error) {
-        console.error('Failed to fetch product data:', error);
-      } finally {
-        setIsLoading(false); // Fixed: should be false when done loading
-      }
+  const productsByCategory = products.reduce((acc, product) => {
+    const category = product.category;
+    if (!acc[category]) {
+      acc[category] = [];
     }
-
-    fetchProductData();
-  }, []);
-
-  const productsByCategory = useMemo(() => {
-    return products.reduce((acc, product) => {
-      const category = product.category;
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(product);
-      return acc;
-    }, {} as Record<string, Product[]>);
-  }, [products]);
-
-  const paginatedProducts = useMemo(() => {
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-    return products.slice(startIndex, startIndex + PAGE_SIZE);
-  }, [products, currentPage]);
-
-  if (isLoading) {
-    return (
-      <section className="py-16 bg-background" id="produk">
-        <div className="container mx-auto px-4">
-          {/* Header Skeleton */}
-          <div className="text-center mb-12">
-            <Skeleton className="h-10 w-80 mx-auto mb-4" />
-            <Skeleton className="h-6 w-96 mx-auto" />
-          </div>
-          
-          {/* Tabs Skeleton */}
-          <div className="mb-8">
-            <div className="grid grid-cols-4 gap-2 p-1 bg-muted rounded-md">
-              {[...Array(4)].map((_, i) => (
-                <Skeleton key={i} className="h-10 rounded-sm" />
-              ))}
-            </div>
-          </div>
-          
-          {/* Products Grid Skeleton */}
-          <ProductListSkeleton />
-        </div>
-      </section>
-    );
-  }
+    acc[category].push(product);
+    return acc;
+  }, {} as Record<string, ProductSummary[]>);
 
   return (
     <section 
@@ -121,21 +65,10 @@ export default function ProductCatalog() {
 
   <TabsContent key="ALL" value="all" className="critical-render">
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {paginatedProducts.map((product) => (
+      {products.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}
     </div>
-    {products.length > PAGE_SIZE && (
-      <div className="flex justify-center mt-8">
-        <button 
-          onClick={() => setCurrentPage(prev => prev + 1)}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
-          disabled={currentPage * PAGE_SIZE >= products.length}
-        >
-          {currentPage * PAGE_SIZE >= products.length ? 'No More Products' : 'Load More'}
-        </button>
-      </div>
-    )}
   </TabsContent>
 
   {categories.map((category) => {
@@ -169,18 +102,48 @@ export default function ProductCatalog() {
   );
 }
 
-// Enhanced Loading Spinner with better animation
-function LoadingSpinner() {
+// Client Component - Interactive tabs
+function ProductCatalogClient() {
   return (
-    <div className="flex space-x-1" role="status" aria-label="Loading">
-      <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-      <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-      <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-    </div>
+    <Suspense fallback={<ProductCatalogSkeleton />}>
+      <ProductCatalogContent />
+    </Suspense>
   );
 }
 
-// Enhanced Product List Skeleton with responsive grid
+// Main export - Server Component wrapper
+export default function ProductCatalog() {
+  return <ProductCatalogClient />;
+}
+
+// Loading Skeleton
+function ProductCatalogSkeleton() {
+  return (
+    <section className="py-16 bg-background" id="produk">
+      <div className="container mx-auto px-4">
+        {/* Header Skeleton */}
+        <div className="text-center mb-12">
+          <Skeleton className="h-10 w-80 mx-auto mb-4" />
+          <Skeleton className="h-6 w-96 mx-auto" />
+        </div>
+        
+        {/* Tabs Skeleton */}
+        <div className="mb-8">
+          <div className="grid grid-cols-4 gap-2 p-1 bg-muted rounded-md">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-10 rounded-sm" />
+            ))}
+          </div>
+        </div>
+        
+        {/* Products Grid Skeleton */}
+        <ProductListSkeleton />
+      </div>
+    </section>
+  );
+}
+
+// Product List Skeleton
 function ProductListSkeleton() {
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -191,7 +154,7 @@ function ProductListSkeleton() {
   );
 }
 
-// Enhanced Skeleton Card with better visual hierarchy
+// Skeleton Card
 function SkeletonCard({ index }: { index: number }) {
   return (
     <div className="bg-card rounded-lg border border-border overflow-hidden shadow-sm hover:shadow-md transition-shadow">

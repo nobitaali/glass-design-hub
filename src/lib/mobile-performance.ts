@@ -1,176 +1,375 @@
-// Declare gtag function for TypeScript
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
-  }
+/**
+ * Mobile Performance Monitoring
+ * Monitors and optimizes performance metrics specifically for mobile devices
+ */
+
+import { getCLS, getINP, getFCP, getLCP, getTTFB } from 'web-vitals'
+
+// Mobile-specific thresholds (stricter than desktop)
+const MOBILE_THRESHOLDS = {
+  CLS: 0.1,      // Cumulative Layout Shift
+  LCP: 2500,      // Largest Contentful Paint (ms)
+  INP: 100,       // Interaction to Next Paint (ms)
+  FCP: 1800,      // First Contentful Paint (ms)
+  TTFB: 600,      // Time to First Byte (ms)
 }
 
-// Mobile Performance Monitoring
-export function initMobilePerformanceMonitoring() {
-  if (typeof window === 'undefined') return
+interface PerformanceMetric {
+  name: string
+  value: number
+  rating: 'good' | 'needs-improvement' | 'poor'
+  timestamp: number
+  isMobile: boolean
+}
 
-  const isMobile = window.innerWidth < 768
-  
-  if (isMobile) {
-    // Monitor mobile-specific metrics
+class MobilePerformanceMonitor {
+  private metrics: PerformanceMetric[] = []
+  private isMobile: boolean = false
+
+  constructor() {
     if (typeof window !== 'undefined') {
-      import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-        // Mobile-specific thresholds (stricter than desktop)
-        getCLS((metric) => {
-          if (metric.value > 0.1) { // Stricter for mobile
-            console.warn('Mobile CLS issue:', metric.value)
-            // Send to analytics
-            if (typeof window.gtag !== 'undefined') {
-              window.gtag('event', 'mobile_cls_issue', {
-                value: metric.value,
-                custom_parameter: 'mobile_performance'
-              })
-            }
-          }
-        })
-        
-        getLCP((metric) => {
-          if (metric.value > 2500) { // Mobile LCP threshold
-            console.warn('Mobile LCP issue:', metric.value)
-            if (typeof window.gtag !== 'undefined') {
-              window.gtag('event', 'mobile_lcp_issue', {
-                value: metric.value,
-                custom_parameter: 'mobile_performance'
-              })
-            }
-          }
-        })
-        
-        getFID((metric) => {
-          if (metric.value > 100) { // Mobile FID threshold
-            console.warn('Mobile FID issue:', metric.value)
-            if (typeof window.gtag !== 'undefined') {
-              window.gtag('event', 'mobile_fid_issue', {
-                value: metric.value,
-                custom_parameter: 'mobile_performance'
-              })
-            }
-          }
-        })
+      this.isMobile = window.innerWidth < 768
+    }
+  }
 
-        getFCP((metric) => {
-          if (metric.value > 1800) { // Mobile FCP threshold
-            console.warn('Mobile FCP issue:', metric.value)
-          }
-        })
+  /**
+   * Initialize mobile performance monitoring
+   */
+  init() {
+    if (typeof window === 'undefined') return
 
-        getTTFB((metric) => {
-          if (metric.value > 800) { // Mobile TTFB threshold
-            console.warn('Mobile TTFB issue:', metric.value)
+    console.log('[Mobile Performance] Initializing monitoring for', this.isMobile ? 'mobile' : 'desktop')
+
+    // Monitor Core Web Vitals
+    this.monitorCLS()
+    this.monitorLCP()
+    this.monitorINP()
+    this.monitorFCP()
+    this.monitorTTFB()
+
+    // Monitor resource loading
+    this.monitorResources()
+
+    // Monitor long tasks
+    this.monitorLongTasks()
+  }
+
+  /**
+   * Monitor Cumulative Layout Shift
+   */
+  private monitorCLS() {
+    getCLS((metric) => {
+      const rating = this.getRating(metric.value, MOBILE_THRESHOLDS.CLS)
+      this.recordMetric('CLS', metric.value, rating)
+
+      if (rating !== 'good') {
+        console.warn('[Mobile Performance] CLS issue detected:', metric.value, 'threshold:', MOBILE_THRESHOLDS.CLS)
+        this.suggestCLSFixes()
+      }
+    })
+  }
+
+  /**
+   * Monitor Largest Contentful Paint
+   */
+  private monitorLCP() {
+    getLCP((metric) => {
+      const rating = this.getRating(metric.value, MOBILE_THRESHOLDS.LCP)
+      this.recordMetric('LCP', metric.value, rating)
+
+      if (rating !== 'good') {
+        console.warn('[Mobile Performance] LCP issue detected:', metric.value, 'threshold:', MOBILE_THRESHOLDS.LCP)
+        this.suggestLCPFixes()
+      }
+    })
+  }
+
+  /**
+   * Monitor Interaction to Next Paint (replaces deprecated FID)
+   */
+  private monitorINP() {
+    getINP((metric) => {
+      const rating = this.getRating(metric.value, MOBILE_THRESHOLDS.INP)
+      this.recordMetric('INP', metric.value, rating)
+
+      if (rating !== 'good') {
+        console.warn('[Mobile Performance] INP issue detected:', metric.value, 'threshold:', MOBILE_THRESHOLDS.INP)
+        this.suggestINPFixes()
+      }
+    })
+  }
+
+  /**
+   * Monitor First Contentful Paint
+   */
+  private monitorFCP() {
+    getFCP((metric) => {
+      const rating = this.getRating(metric.value, MOBILE_THRESHOLDS.FCP)
+      this.recordMetric('FCP', metric.value, rating)
+
+      if (rating !== 'good') {
+        console.warn('[Mobile Performance] FCP issue detected:', metric.value, 'threshold:', MOBILE_THRESHOLDS.FCP)
+      }
+    })
+  }
+
+  /**
+   * Monitor Time to First Byte
+   */
+  private monitorTTFB() {
+    getTTFB((metric) => {
+      const rating = this.getRating(metric.value, MOBILE_THRESHOLDS.TTFB)
+      this.recordMetric('TTFB', metric.value, rating)
+
+      if (rating !== 'good') {
+        console.warn('[Mobile Performance] TTFB issue detected:', metric.value, 'threshold:', MOBILE_THRESHOLDS.TTFB)
+      }
+    })
+  }
+
+  /**
+   * Monitor resource loading performance
+   */
+  private monitorResources() {
+    if (typeof window === 'undefined' || !window.performance) return
+
+    // Use PerformanceObserver for resource timing
+    if ('PerformanceObserver' in window) {
+      const observer = new PerformanceObserver((list) => {
+        const entries = list.getEntries()
+        entries.forEach((entry) => {
+          if (entry.entryType === 'resource') {
+            const resource = entry as PerformanceResourceTiming
+            const duration = resource.duration
+
+            // Flag slow resources (> 2 seconds)
+            if (duration > 2000) {
+              console.warn('[Mobile Performance] Slow resource detected:', {
+                name: resource.name,
+                duration: `${duration.toFixed(0)}ms`,
+                size: resource.transferSize ? `${(resource.transferSize / 1024).toFixed(0)}KB` : 'unknown'
+              })
+            }
           }
         })
-      }).catch((error) => {
-        console.warn('Failed to load web-vitals:', error)
       })
-    }
 
-    // Monitor mobile-specific issues
-    monitorMobileSpecificIssues()
-  }
-}
-
-function monitorMobileSpecificIssues() {
-  // Monitor memory usage on mobile
-  if ('memory' in performance) {
-    const memoryInfo = (performance as any).memory
-    if (memoryInfo.usedJSHeapSize > 50 * 1024 * 1024) { // 50MB threshold
-      console.warn('High memory usage on mobile:', memoryInfo.usedJSHeapSize)
+      observer.observe({ entryTypes: ['resource'] })
     }
   }
 
-  // Monitor network conditions
-  if ('connection' in navigator) {
-    const connection = (navigator as any).connection
-    if (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g') {
-      console.warn('Slow network detected:', connection.effectiveType)
-      // Could trigger different loading strategies
+  /**
+   * Monitor long tasks that block the main thread
+   */
+  private monitorLongTasks() {
+    if (typeof window === 'undefined' || !('PerformanceObserver' in window)) return
+
+    try {
+      const observer = new PerformanceObserver((list) => {
+        const entries = list.getEntries()
+        entries.forEach((entry) => {
+          if (entry.duration > 50) {
+            console.warn('[Mobile Performance] Long task detected:', {
+              duration: `${entry.duration.toFixed(0)}ms`,
+              startTime: `${entry.startTime.toFixed(0)}ms`
+            })
+          }
+        })
+      })
+
+      observer.observe({ entryTypes: ['longtask'] })
+    } catch (e) {
+      // Long task API might not be supported
+      console.log('[Mobile Performance] Long task monitoring not supported')
     }
   }
 
-  // Monitor viewport changes (orientation)
-  window.addEventListener('orientationchange', () => {
-    setTimeout(() => {
-      // Re-measure after orientation change
-      console.log('Orientation changed, viewport:', window.innerWidth, 'x', window.innerHeight)
-    }, 100)
-  })
-}
-
-// Utility to detect mobile device capabilities
-export function getMobileCapabilities() {
-  if (typeof window === 'undefined') return null
-
-  return {
-    isMobile: window.innerWidth < 768,
-    isTouch: 'ontouchstart' in window,
-    supportsWebP: checkWebPSupport(),
-    supportsAVIF: checkAVIFSupport(),
-    connectionType: getConnectionType(),
-    memoryInfo: getMemoryInfo(),
-    devicePixelRatio: window.devicePixelRatio || 1
+  /**
+   * Get rating for a metric value
+   */
+  private getRating(value: number, threshold: number): 'good' | 'needs-improvement' | 'poor' {
+    if (value <= threshold) return 'good'
+    if (value <= threshold * 1.5) return 'needs-improvement'
+    return 'poor'
   }
-}
 
-function checkWebPSupport(): boolean {
-  const canvas = document.createElement('canvas')
-  canvas.width = 1
-  canvas.height = 1
-  return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0
-}
+  /**
+   * Record a performance metric
+   */
+  private recordMetric(name: string, value: number, rating: 'good' | 'needs-improvement' | 'poor') {
+    const metric: PerformanceMetric = {
+      name,
+      value,
+      rating,
+      timestamp: Date.now(),
+      isMobile: this.isMobile
+    }
 
-function checkAVIFSupport(): boolean {
-  const canvas = document.createElement('canvas')
-  canvas.width = 1
-  canvas.height = 1
-  return canvas.toDataURL('image/avif').indexOf('data:image/avif') === 0
-}
+    this.metrics.push(metric)
 
-function getConnectionType(): string {
-  if ('connection' in navigator) {
-    return (navigator as any).connection.effectiveType || 'unknown'
+    // Store in sessionStorage for debugging
+    if (typeof sessionStorage !== 'undefined') {
+      try {
+        const stored = sessionStorage.getItem('mobile-performance-metrics')
+        const metrics = stored ? JSON.parse(stored) : []
+        metrics.push(metric)
+        // Keep only last 50 metrics
+        if (metrics.length > 50) metrics.shift()
+        sessionStorage.setItem('mobile-performance-metrics', JSON.stringify(metrics))
+      } catch (e) {
+        // SessionStorage might be disabled
+      }
+    }
   }
-  return 'unknown'
-}
 
-function getMemoryInfo() {
-  if ('memory' in performance) {
-    const memory = (performance as any).memory
+  /**
+   * Suggest fixes for CLS issues
+   */
+  private suggestCLSFixes() {
+    console.log('[Mobile Performance] CLS Optimization Suggestions:')
+    console.log('1. Ensure images have explicit width and height attributes')
+    console.log('2. Reserve space for dynamic content (ads, widgets)')
+    console.log('3. Avoid inserting content above existing content')
+    console.log('4. Use CSS transform animations instead of changing layout properties')
+  }
+
+  /**
+   * Suggest fixes for LCP issues
+   */
+  private suggestLCPFixes() {
+    console.log('[Mobile Performance] LCP Optimization Suggestions:')
+    console.log('1. Optimize images: use WebP/AVIF, lazy load non-critical images')
+    console.log('2. Preload critical resources (fonts, critical CSS)')
+    console.log('3. Reduce server response time (TTFB)')
+    console.log('4. Minify CSS and JavaScript')
+    console.log('5. Use HTTP/2 or HTTP/3')
+  }
+
+  /**
+   * Suggest fixes for INP issues
+   */
+  private suggestINPFixes() {
+    console.log('[Mobile Performance] INP Optimization Suggestions:')
+    console.log('1. Break up long tasks (code splitting)')
+    console.log('2. Reduce JavaScript execution time')
+    console.log('3. Use web workers for heavy computations')
+    console.log('4. Minimize main thread work')
+    console.log('5. Use requestIdleCallback for non-critical work')
+  }
+
+  /**
+   * Get all recorded metrics
+   */
+  getMetrics(): PerformanceMetric[] {
+    return this.metrics
+  }
+
+  /**
+   * Get metrics by rating
+   */
+  getMetricsByRating(rating: 'good' | 'needs-improvement' | 'poor'): PerformanceMetric[] {
+    return this.metrics.filter(m => m.rating === rating)
+  }
+
+  /**
+   * Get performance summary
+   */
+  getSummary() {
+    const summary = {
+      total: this.metrics.length,
+      good: this.metrics.filter(m => m.rating === 'good').length,
+      needsImprovement: this.metrics.filter(m => m.rating === 'needs-improvement').length,
+      poor: this.metrics.filter(m => m.rating === 'poor').length,
+      isMobile: this.isMobile
+    }
+
+    const score = Math.round((summary.good / summary.total) * 100)
+
     return {
-      used: memory.usedJSHeapSize,
-      total: memory.totalJSHeapSize,
-      limit: memory.jsHeapSizeLimit
+      ...summary,
+      score,
+      rating: score >= 90 ? 'excellent' : score >= 75 ? 'good' : score >= 50 ? 'fair' : 'poor'
     }
   }
-  return null
 }
 
-// Preload critical resources for mobile
+// Singleton instance
+let monitor: MobilePerformanceMonitor | null = null
+
+/**
+ * Initialize mobile performance monitoring
+ */
+export function initMobilePerformanceMonitoring() {
+  if (!monitor) {
+    monitor = new MobilePerformanceMonitor()
+    monitor.init()
+  }
+  return monitor
+}
+
+/**
+ * Get the performance monitor instance
+ */
+export function getMobilePerformanceMonitor() {
+  return monitor
+}
+
+/**
+ * Preload critical mobile resources
+ */
 export function preloadCriticalMobileResources() {
   if (typeof window === 'undefined') return
 
-  const isMobile = window.innerWidth < 768
-  
-  if (isMobile) {
-    // Critical mobile resources (fonts are handled by Next.js font optimization)
-    const criticalResources = [
-      // Add other critical mobile resources as needed
-    ]
+  // Preload critical fonts
+  const fonts = [
+    '/fonts/inter-var.woff2',
+  ]
 
-    criticalResources.forEach(resource => {
-      const link = document.createElement('link')
-      link.rel = 'preload'
-      link.href = resource
-      link.as = resource.endsWith('.woff2') ? 'font' : 'image'
-      if (resource.endsWith('.woff2')) {
-        link.type = 'font/woff2'
-        link.crossOrigin = 'anonymous'
-      }
-      document.head.appendChild(link)
-    })
+  fonts.forEach(font => {
+    const link = document.createElement('link')
+    link.rel = 'preload'
+    link.as = 'font'
+    link.type = 'font/woff2'
+    link.href = font
+    link.crossOrigin = 'anonymous'
+    document.head.appendChild(link)
+  })
+
+  // Preconnect to critical domains
+  const domains = [
+    'https://hyztwerpkhopdcsenbsn.supabase.co',
+    'https://images.unsplash.com',
+  ]
+
+  domains.forEach(domain => {
+    const link = document.createElement('link')
+    link.rel = 'preconnect'
+    link.href = domain
+    document.head.appendChild(link)
+  })
+}
+
+/**
+ * Check if current device is mobile
+ */
+export function isMobileDevice(): boolean {
+  if (typeof window === 'undefined') return false
+  return window.innerWidth < 768
+}
+
+/**
+ * Get network information (if available)
+ */
+export function getNetworkInfo() {
+  if (typeof window === 'undefined' || !('connection' in navigator)) {
+    return null
+  }
+
+  const connection = (navigator as any).connection
+  return {
+    effectiveType: connection.effectiveType,
+    downlink: connection.downlink,
+    rtt: connection.rtt,
+    saveData: connection.saveData
   }
 }

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { CalendarDays, Clock, User, ArrowLeft, Share2, BookmarkPlus } from "lucide-react";
@@ -14,6 +15,9 @@ interface BlogPostPageProps {
     slug: string;
   };
 }
+
+// ISR: Revalidate blog post every 1 hour
+export const revalidate = 3600;
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
@@ -99,10 +103,28 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     author: {
       "@type": "Person",
       name: post.author,
+      jobTitle: "Interior Designer & Content Creator",
+      description: "Interior Designer & Content Creator. Passionate about creating beautiful and functional spaces. Expert in glass film, sandblast, and decorative stickers for modern interiors.",
+      url: "https://www.jayasticker.id",
+      worksFor: {
+        "@type": "Organization",
+        name: "Jaya Sticker Indonesia",
+        url: "https://www.jayasticker.id"
+      },
+      sameAs: [
+        "https://www.instagram.com/jayasticker",
+        "https://www.facebook.com/jayasticker"
+      ]
     },
     publisher: {
       "@type": "Organization",
       name: "Jaya Sticker Indonesia",
+      url: "https://www.jayasticker.id",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.jayasticker.id/favicon-32x32.png"
+      },
+      description: "Spesialis kaca film, sandblast, dan stiker dekoratif untuk interior rumah, kantor, dan kendaraan di Yogyakarta dan seluruh Indonesia."
     },
     datePublished: post.published_at,
     dateModified: post.updated_at,
@@ -110,6 +132,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       "@type": "WebPage",
       "@id": `https://jayasticker.id/blog/${post.slug}`,
     },
+    keywords: post.tags.join(", "),
+    articleSection: post.category,
+    inLanguage: "id-ID"
   };
 
   return (
@@ -123,6 +148,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         <Header />
         
         <article className="container mx-auto px-4 py-8 max-w-4xl">
+          {/* Breadcrumbs */}
+          <Breadcrumbs 
+            items={[
+              { label: "Blog", href: "/blog" },
+              { label: post.category, href: `/blog/category/${post.category.toLowerCase().replace(/\s+/g, '-')}` },
+              { label: post.title, href: `/blog/${post.slug}` }
+            ]}
+          />
+
           {/* Back to Blog */}
           <div className="mb-8">
             <Link 

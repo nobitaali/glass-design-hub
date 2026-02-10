@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
+import { unstable_cache } from 'next/cache'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -72,171 +73,206 @@ export interface BlogCategory {
   updated_at: string
 }
 
-// Cache for products to reduce API calls
-const productCache = new Map<string, { data: ProductSummary[], timestamp: number }>();
-const fullProductCache = new Map<string, { data: Product, timestamp: number }>();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+// Next.js unstable_cache for server-side caching
+// This is better than client-side Map cache for Next.js App Router
+
+// Helper function to create cached fetchers
+const createCachedFetcher = <T,>(
+  fetcher: () => Promise<T>,
+  keyParts: string[],
+  revalidateSeconds: number = 300
+) => {
+  // Check if we're on the server side
+  if (typeof window === 'undefined') {
+    return unstable_cache(fetcher, keyParts, {
+      revalidate: revalidateSeconds,
+      tags: keyParts
+    })
+  } else {
+    // Client-side fallback - just return the fetcher function
+    return fetcher
+  }
+}
 
 // Optimized Product service functions
 export const productService = {
   // Get products summary - only essential data for listings/sliders
-  async getAllProducts(): Promise<ProductSummary[]> {
-    const cacheKey = 'all-products';
-    const cached = productCache.get(cacheKey);
-    
-    // Return cached data if still valid
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-      return cached.data;
-    }
+  getAllProducts: async (): Promise<ProductSummary[]> => {
+    const fetcher = async (): Promise<ProductSummary[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('id, slug, title, description, category, image_url, price, features, created_at')
+          .order('created_at', { ascending: false })
+          .limit(10); // Limit for better performance
 
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('id, slug, title, description, category, image_url, price, features, created_at')
-        .order('created_at', { ascending: false })
-        .limit(10); // Limit for better performance
+        if (error) {
+          console.error('Error fetching products:', error);
+          return [];
+        }
 
-      if (error) {
-        console.error('Error fetching products:', error);
-        return cached?.data || [];
+        return data || [];
+      } catch (error) {
+        console.error('Network error fetching products:', error);
+        return [];
       }
+    };
 
-      const products = data || [];
-      
-      // Cache the results
-      productCache.set(cacheKey, {
-        data: products,
-        timestamp: Date.now()
-      });
-
-      return products;
-    } catch (error) {
-      console.error('Network error fetching products:', error);
-      return cached?.data || [];
+    if (typeof window === 'undefined') {
+      const cachedFetcher = createCachedFetcher(fetcher, ['products', 'all'], 300);
+      return cachedFetcher();
+    } else {
+      return fetcher();
     }
   },
 
   // Get full product details - only when needed (for individual product pages)
-  async getProductBySlug(slug: string): Promise<Product | null> {
-    const cacheKey = `product-${slug}`;
-    const cached = fullProductCache.get(cacheKey);
-    
-    // Return cached data if still valid
-    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-      return cached.data;
-    }
+  getProductBySlug: (slug: string) => {
+    const fetcher = async (): Promise<Product | null> => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('slug', slug)
+          .single();
 
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('slug', slug)
-        .single();
+        if (error) {
+          console.error('Error fetching product by slug:', error);
+          return null;
+        }
 
-      if (error) {
-        console.error('Error fetching product by slug:', error);
+        return data;
+      } catch (error) {
+        console.error('Network error fetching product:', error);
         return null;
       }
+    };
 
-      // Cache the full product
-      if (data) {
-        fullProductCache.set(cacheKey, {
-          data: data,
-          timestamp: Date.now()
-        });
-      }
-
-      return data;
-    } catch (error) {
-      console.error('Network error fetching product:', error);
-      return null;
+    if (typeof window === 'undefined') {
+      return createCachedFetcher(fetcher, ['products', 'slug', slug], 300)();
+    } else {
+      return fetcher();
     }
   },
 
   // Get products by category - lightweight version
-  async getProductsByCategory(category: string): Promise<ProductSummary[]> {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('id, slug, title, description, category, image_url, price, features, created_at')
-        .eq('category', category)
-        .order('created_at', { ascending: false })
-        .limit(20);
+  getProductsByCategory: (category: string) => {
+    const fetcher = async (): Promise<ProductSummary[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('id, slug, title, description, category, image_url, price, features, created_at')
+          .eq('category', category)
+          .order('created_at', { ascending: false })
+          .limit(20);
 
-      if (error) {
-        console.error('Error fetching products by category:', error);
+        if (error) {
+          console.error('Error fetching products by category:', error);
+          return [];
+        }
+
+        return data || [];
+      } catch (error) {
+        console.error('Network error fetching products by category:', error);
         return [];
       }
+    };
 
-      return data || [];
-    } catch (error) {
-      console.error('Network error fetching products by category:', error);
-      return [];
+    if (typeof window === 'undefined') {
+      return createCachedFetcher(fetcher, ['products', 'category', category], 300)();
+    } else {
+      return fetcher();
     }
   },
 
   // Get all product slugs (for sitemap generation) - minimal data
-  async getAllProductSlugs(): Promise<string[]> {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('slug');
+  getAllProductSlugs: async (): Promise<string[]> => {
+    const fetcher = async (): Promise<string[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('slug');
 
-      if (error) {
-        console.error('Error fetching product slugs:', error);
+        if (error) {
+          console.error('Error fetching product slugs:', error);
+          return [];
+        }
+
+        return data?.map(item => item.slug) || [];
+      } catch (error) {
+        console.error('Network error fetching product slugs:', error);
         return [];
       }
+    };
 
-      return data?.map(item => item.slug) || [];
-    } catch (error) {
-      console.error('Network error fetching product slugs:', error);
-      return [];
+    if (typeof window === 'undefined') {
+      const cachedFetcher = createCachedFetcher(fetcher, ['products', 'slugs'], 600);
+      return cachedFetcher();
+    } else {
+      return fetcher();
     }
   },
 
   // Get all categories - minimal data
-  async getAllCategories(): Promise<string[]> {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('category');
+  getAllCategories: async (): Promise<string[]> => {
+    const fetcher = async (): Promise<string[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('category');
 
-      if (error) {
-        console.error('Error fetching categories:', error);
+        if (error) {
+          console.error('Error fetching categories:', error);
+          return [];
+        }
+
+        const categories = Array.from(new Set(data?.map(item => item.category) || []));
+        return categories;
+      } catch (error) {
+        console.error('Network error fetching categories:', error);
         return [];
       }
+    };
 
-      const categories = Array.from(new Set(data?.map(item => item.category) || []));
-      return categories;
-    } catch (error) {
-      console.error('Network error fetching categories:', error);
-      return [];
+    if (typeof window === 'undefined') {
+      const cachedFetcher = createCachedFetcher(fetcher, ['products', 'categories'], 600);
+      return cachedFetcher();
+    } else {
+      return fetcher();
     }
   },
 
   // Get products by tag - lightweight version
-  async getProductsByTag(tag: string): Promise<ProductSummary[]> {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('id, slug, title, description, category, image_url, price, features, created_at')
-        .textSearch('seo_keywords', tag.replace(/-/g, ' '))
-        .order('created_at', { ascending: false })
-        .limit(20);
+  getProductsByTag: (tag: string) => {
+    const fetcher = async (): Promise<ProductSummary[]> => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('id, slug, title, description, category, image_url, price, features, created_at')
+          .textSearch('seo_keywords', tag.replace(/-/g, ' '))
+          .order('created_at', { ascending: false })
+          .limit(20);
 
-      if (error) {
-        console.error('Error fetching products by tag:', error);
+        if (error) {
+          console.error('Error fetching products by tag:', error);
+          return [];
+        }
+
+        return data || [];
+      } catch (error) {
+        console.error('Network error fetching products by tag:', error);
         return [];
       }
+    };
 
-      return data || [];
-    } catch (error) {
-      console.error('Network error fetching products by tag:', error);
-      return [];
+    if (typeof window === 'undefined') {
+      return createCachedFetcher(fetcher, ['products', 'tag', tag], 300)();
+    } else {
+      return fetcher();
     }
   },
 
-  // Admin functions - full data access
+  // Admin functions - full data access (no cache for mutations)
   async createProduct(product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<Product | null> {
     try {
       const { data, error } = await supabase
@@ -249,10 +285,6 @@ export const productService = {
         console.error('Error creating product:', error);
         return null;
       }
-
-      // Clear cache when data changes
-      productCache.clear();
-      fullProductCache.clear();
 
       return data;
     } catch (error) {
@@ -275,10 +307,6 @@ export const productService = {
         return null;
       }
 
-      // Clear cache when data changes
-      productCache.clear();
-      fullProductCache.clear();
-
       return data;
     } catch (error) {
       console.error('Network error updating product:', error);
@@ -298,10 +326,6 @@ export const productService = {
         return false;
       }
 
-      // Clear cache when data changes
-      productCache.clear();
-      fullProductCache.clear();
-
       return true;
     } catch (error) {
       console.error('Network error deleting product:', error);
@@ -313,193 +337,278 @@ export const productService = {
 // Blog service functions (keeping existing functionality)
 export const blogService = {
   // Get all published blog posts
-  async getAllPosts(limit?: number): Promise<BlogPost[]> {
-    let query = supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('published', true)
-      .order('published_at', { ascending: false })
+  getAllPosts: async (limit?: number): Promise<BlogPost[]> => {
+    const fetcher = async (limit?: number): Promise<BlogPost[]> => {
+      let query = supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .order('published_at', { ascending: false })
 
-    if (limit) {
-      query = query.limit(limit)
+      if (limit) {
+        query = query.limit(limit)
+      }
+
+      const { data, error } = await query
+
+      if (error) {
+        console.error('Error fetching blog posts:', error)
+        return []
+      }
+
+      return data || []
+    };
+
+    if (typeof window === 'undefined') {
+      const cachedFetcher = createCachedFetcher(fetcher, ['blog', 'posts'], 600);
+      return cachedFetcher(limit);
+    } else {
+      return fetcher(limit);
     }
-
-    const { data, error } = await query
-
-    if (error) {
-      console.error('Error fetching blog posts:', error)
-      return []
-    }
-
-    return data || []
   },
 
   // Get featured blog posts
-  async getFeaturedPosts(): Promise<BlogPost[]> {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('published', true)
-      .eq('featured', true)
-      .order('published_at', { ascending: false })
+  getFeaturedPosts: async (): Promise<BlogPost[]> => {
+    const fetcher = async (): Promise<BlogPost[]> => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .eq('featured', true)
+        .order('published_at', { ascending: false })
 
-    if (error) {
-      console.error('Error fetching featured posts:', error)
-      return []
+      if (error) {
+        console.error('Error fetching featured posts:', error)
+        return []
+      }
+
+      return data || []
+    };
+
+    if (typeof window === 'undefined') {
+      const cachedFetcher = createCachedFetcher(fetcher, ['blog', 'featured'], 600);
+      return cachedFetcher();
+    } else {
+      return fetcher();
     }
-
-    return data || []
   },
 
   // Get blog post by slug
-  async getPostBySlug(slug: string): Promise<BlogPost | null> {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('slug', slug)
-      .eq('published', true)
-      .single()
-
-    if (error) {
-      console.error('Error fetching blog post by slug:', error)
-      return null
-    }
-
-    // Increment view count
-    if (data) {
-      await supabase
+  getPostBySlug: (slug: string) => {
+    const fetcher = async (): Promise<BlogPost | null> => {
+      const { data, error } = await supabase
         .from('blog_posts')
-        .update({ views: data.views + 1 })
-        .eq('id', data.id)
-    }
+        .select('*')
+        .eq('slug', slug)
+        .eq('published', true)
+        .single()
 
-    return data
+      if (error) {
+        console.error('Error fetching blog post by slug:', error)
+        return null
+      }
+
+      // Increment view count (non-cached operation)
+      if (data) {
+        await supabase
+          .from('blog_posts')
+          .update({ views: data.views + 1 })
+          .eq('id', data.id)
+      }
+
+      return data
+    };
+
+    if (typeof window === 'undefined') {
+      return createCachedFetcher(fetcher, ['blog', 'post', slug], 3600)();
+    } else {
+      return fetcher();
+    }
   },
 
   // Get posts by category
-  async getPostsByCategory(category: string, limit?: number): Promise<BlogPost[]> {
-    let query = supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('published', true)
-      .eq('category', category)
-      .order('published_at', { ascending: false })
+  getPostsByCategory: (category: string, limit?: number) => {
+    const fetcher = async (): Promise<BlogPost[]> => {
+      let query = supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .eq('category', category)
+        .order('published_at', { ascending: false })
 
-    if (limit) {
-      query = query.limit(limit)
+      if (limit) {
+        query = query.limit(limit)
+      }
+
+      const { data, error } = await query
+
+      if (error) {
+        console.error('Error fetching posts by category:', error)
+        return []
+      }
+
+      return data || []
+    };
+
+    if (typeof window === 'undefined') {
+      return createCachedFetcher(fetcher, ['blog', 'category', category], 600)();
+    } else {
+      return fetcher();
     }
-
-    const { data, error } = await query
-
-    if (error) {
-      console.error('Error fetching posts by category:', error)
-      return []
-    }
-
-    return data || []
   },
 
   // Get posts by tag
-  async getPostsByTag(tag: string): Promise<BlogPost[]> {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('published', true)
-      .contains('tags', [tag])
-      .order('published_at', { ascending: false })
+  getPostsByTag: (tag: string) => {
+    const fetcher = async (): Promise<BlogPost[]> => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .contains('tags', [tag])
+        .order('published_at', { ascending: false })
 
-    if (error) {
-      console.error('Error fetching posts by tag:', error)
-      return []
+      if (error) {
+        console.error('Error fetching posts by tag:', error)
+        return []
+      }
+
+      return data || []
+    };
+
+    if (typeof window === 'undefined') {
+      return createCachedFetcher(fetcher, ['blog', 'tag', tag], 600)();
+    } else {
+      return fetcher();
     }
-
-    return data || []
   },
 
   // Get related posts (same category, excluding current post)
-  async getRelatedPosts(postId: string, category: string, limit: number = 3): Promise<BlogPost[]> {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('published', true)
-      .eq('category', category)
-      .neq('id', postId)
-      .order('published_at', { ascending: false })
-      .limit(limit)
+  getRelatedPosts: (postId: string, category: string, limit: number = 3) => {
+    const fetcher = async (): Promise<BlogPost[]> => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .eq('category', category)
+        .neq('id', postId)
+        .order('published_at', { ascending: false })
+        .limit(limit)
 
-    if (error) {
-      console.error('Error fetching related posts:', error)
-      return []
+      if (error) {
+        console.error('Error fetching related posts:', error)
+        return []
+      }
+
+      return data || []
+    };
+
+    if (typeof window === 'undefined') {
+      return createCachedFetcher(fetcher, ['blog', 'related', postId, category], 600)();
+    } else {
+      return fetcher();
     }
-
-    return data || []
   },
 
   // Search posts
-  async searchPosts(query: string): Promise<BlogPost[]> {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('published', true)
-      .or(`title.ilike.%${query}%, content.ilike.%${query}%, excerpt.ilike.%${query}%`)
-      .order('published_at', { ascending: false })
+  searchPosts: (query: string) => {
+    const fetcher = async (): Promise<BlogPost[]> => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('published', true)
+        .or(`title.ilike.%${query}%, content.ilike.%${query}%, excerpt.ilike.%${query}%`)
+        .order('published_at', { ascending: false })
 
-    if (error) {
-      console.error('Error searching posts:', error)
-      return []
+      if (error) {
+        console.error('Error searching posts:', error)
+        return []
+      }
+
+      return data || []
+    };
+
+    if (typeof window === 'undefined') {
+      return createCachedFetcher(fetcher, ['blog', 'search', query], 300)();
+    } else {
+      return fetcher();
     }
-
-    return data || []
   },
 
   // Get all blog categories
-  async getAllCategories(): Promise<BlogCategory[]> {
-    const { data, error } = await supabase
-      .from('blog_categories')
-      .select('*')
-      .order('name', { ascending: true })
+  getAllCategories: async (): Promise<BlogCategory[]> => {
+    const fetcher = async (): Promise<BlogCategory[]> => {
+      const { data, error } = await supabase
+        .from('blog_categories')
+        .select('*')
+        .order('name', { ascending: true })
 
-    if (error) {
-      console.error('Error fetching blog categories:', error)
-      return []
+      if (error) {
+        console.error('Error fetching blog categories:', error)
+        return []
+      }
+
+      return data || []
+    };
+
+    if (typeof window === 'undefined') {
+      const cachedFetcher = createCachedFetcher(fetcher, ['blog', 'categories'], 600);
+      return cachedFetcher();
+    } else {
+      return fetcher();
     }
-
-    return data || []
   },
 
   // Get all unique tags
-  async getAllTags(): Promise<string[]> {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('tags')
-      .eq('published', true)
+  getAllTags: async (): Promise<string[]> => {
+    const fetcher = async (): Promise<string[]> => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('tags')
+        .eq('published', true)
 
-    if (error) {
-      console.error('Error fetching tags:', error)
-      return []
+      if (error) {
+        console.error('Error fetching tags:', error)
+        return []
+      }
+
+      const allTags = new Set<string>()
+      data?.forEach(post => {
+        post.tags?.forEach((tag: string) => allTags.add(tag))
+      })
+
+      return Array.from(allTags).sort()
+    };
+
+    if (typeof window === 'undefined') {
+      const cachedFetcher = createCachedFetcher(fetcher, ['blog', 'tags'], 600);
+      return cachedFetcher();
+    } else {
+      return fetcher();
     }
-
-    const allTags = new Set<string>()
-    data?.forEach(post => {
-      post.tags?.forEach((tag: string) => allTags.add(tag))
-    })
-
-    return Array.from(allTags).sort()
   },
 
   // Get all post slugs (for sitemap)
-  async getAllPostSlugs(): Promise<string[]> {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('slug')
-      .eq('published', true)
+  getAllPostSlugs: async (): Promise<string[]> => {
+    const fetcher = async (): Promise<string[]> => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('slug')
+        .eq('published', true)
 
-    if (error) {
-      console.error('Error fetching post slugs:', error)
-      return []
+      if (error) {
+        console.error('Error fetching post slugs:', error)
+        return []
+      }
+
+      return data?.map(item => item.slug) || []
+    };
+
+    if (typeof window === 'undefined') {
+      const cachedFetcher = createCachedFetcher(fetcher, ['blog', 'slugs'], 600);
+      return cachedFetcher();
+    } else {
+      return fetcher();
     }
-
-    return data?.map(item => item.slug) || []
   },
 
   // Admin functions

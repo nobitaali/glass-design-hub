@@ -6,10 +6,10 @@ import { Check, Eye } from "lucide-react";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import QuoteRequestButton from "@/components/QuoteRequestButton";
 import { ProductImage } from "@/components/OptimizedImage";
-import { Product } from "@/lib/supabase";
+import { ProductSummary } from "@/lib/supabase-optimized";
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductSummary;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
