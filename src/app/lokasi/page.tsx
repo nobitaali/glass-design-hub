@@ -12,7 +12,29 @@ const WhatsAppFloat = dynamic(() => import('@/components/WhatsAppFloat'), {
 export const metadata: Metadata = {
     title: 'Lokasi Layanan Kami | Kaca Film & Sandblast - Jaya Sticker',
     description: 'Kami melayani pemasangan kaca film, sandblast, dan stiker dekoratif di Yogyakarta dan sekitarnya: Bantul, Sleman, Solo, Magelang, Klaten. Gratis konsultasi dan survey!',
-    keywords: 'lokasi layanan, kaca film jogja, sandblast bantul, stiker sleman, kaca film solo'
+    keywords: 'lokasi layanan, kaca film jogja, sandblast bantul, stiker sleman, kaca film solo',
+    openGraph: {
+        title: 'Lokasi Layanan Kami | Kaca Film & Sandblast - Jaya Sticker',
+        description: 'Kami melayani pemasangan kaca film, sandblast, dan stiker dekoratif di Yogyakarta dan sekitarnya: Bantul, Sleman, Solo, Magelang, Klaten. Gratis konsultasi dan survey!',
+        url: 'https://www.jayasticker.id/lokasi',
+        siteName: 'Jaya Sticker Custom',
+        locale: 'id_ID',
+        type: 'website',
+        images: [
+            {
+                url: 'https://www.jayasticker.id/og-lokasi.jpg',
+                width: 1200,
+                height: 630,
+                alt: 'Lokasi Layanan Jaya Sticker - Yogyakarta dan Sekitarnya'
+            }
+        ]
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Lokasi Layanan Kami | Kaca Film & Sandblast',
+        description: 'Melayani Bantul, Sleman, Solo, Magelang, Klaten. Gratis konsultasi!',
+        images: ['https://www.jayasticker.id/og-lokasi.jpg']
+    }
 };
 
 export default async function LokasiPage() {
