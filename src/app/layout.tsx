@@ -9,7 +9,7 @@ import { ReactQueryProvider } from "./providers";
 import { ThemeProvider } from "next-themes";
 import PerformanceMonitor, { ResourceHints } from "@/components/PerformanceMonitor";
 const analitics = process.env.NEXT_PUBLIC_ENABLE_GA_TRACKING!
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
   display: 'swap',
   preload: true,
@@ -41,9 +41,9 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
-  title: "Kaca Film & Sandblast Jogja | Jaya Sticker Custom",
-  description: "Spesialis kaca film, sandblast & stiker dekoratif Yogyakarta. Pemasangan profesional seluruh Indonesia. Garansi resmi, harga terjangkau!",
-  keywords: "kaca film jogja, sandblast jogja, stiker dekoratif jogja, kaca film mobil jogja, kaca film rumah jogja, sandblast motif, stiker vinyl jogja, interior design jogja, kaca film hitam, kaca film silver, stiker tembok, one way vision, cutting sticker, reflektor, pemasangan kaca film jogja, jasa sandblast jogja, dekorasi interior, privasi kaca, anti panas, UV protection, kaca film murah jogja, sandblast murah jogja",
+  title: "Stiker Kaca Jogja | Kaca Film, Sandblast Es Buram & Cutting Oracal – Jaya Sticker Custom",
+  description: "Spesialis kaca film, sandblast & stiker dekoratif Yogyakarta. Pemasangan profesional seluruh Indonesia. Garansi resmi, harga terjangkau! Melayani Bantul, Sleman, Solo, Magelang, Klaten.",
+  keywords: "stiker kaca jogja, kaca film jogja, sandblast jogja, kaca film yogyakarta, jasa pasang kaca film jogja, stiker dekoratif jogja, kaca film murah jogja, sandblast custom jogja, one way vision jogja, cutting sticker jogja, kaca film anti panas jogja, stiker kaca kantor jogja, kaca film gedung jogja, wall branding jogja, wrapping stiker jogja, stiker kaca bantul, stiker kaca sleman, kaca film solo",
   authors: [{ name: "Interior Solutions Indonesia" }],
   robots: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
   alternates: {
@@ -67,8 +67,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kaca Film, Sandblast & Stiker Dekoratif Jogja | Interior Solutions Indonesia",
-    description: "✅ Spesialis kaca film, sandblast, dan stiker dekoratif. Pemasangan profesional seluruh Indonesia. Harga terjangkau!",
+    title: "Stiker Kaca Jogja | Kaca Film, Sandblast & Cutting Oracal",
+    description: "✅ Spesialis kaca film, sandblast, dan stiker dekoratif Yogyakarta. Pemasangan profesional seluruh Indonesia. Harga terjangkau!",
     images: ["https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=1200&h=630&fit=crop"],
   },
   other: {
@@ -90,19 +90,19 @@ export default function RootLayout({
       <head>
         {/* Enhanced resource hints for better performance */}
         <ResourceHints />
-        
+
         <meta name="google-site-verification" content="Z4jQZ-VVe8LrGUuWK1404dn7o6-tnNeQvmf-pLytdWQ" />
 
         {/* Optimized script loading - defer analytics to improve performance */}
-        {analitics==="true"&& 
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=G-91VW4NNVRS`}
-        />
+        {analitics === "true" &&
+          <Script
+            id="google-analytics"
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=G-91VW4NNVRS`}
+          />
         }
 
-        {analitics==="true"&&<Script
+        {analitics === "true" && <Script
           id="gtag-init"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -117,7 +117,7 @@ export default function RootLayout({
             `,
           }}
         />}
-        
+
         {/* Optimized schema loading */}
         <Script
           id="local-business-schema"
@@ -165,7 +165,7 @@ export default function RootLayout({
                 "areaServed": "ID",
                 "availableLanguage": "Indonesian"
               },
-             
+
             })
           }}
         />
@@ -274,9 +274,9 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${inter.className}`}>
         <ReactQueryProvider>
-          <ThemeProvider 
-            attribute="class" 
-            defaultTheme="light" 
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
             enableSystem
             disableTransitionOnChange
           >

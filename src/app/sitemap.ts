@@ -4,7 +4,7 @@ import { keywordsToTags } from '@/lib/utils'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.jayasticker.id'
-  
+
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -33,10 +33,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   ]
 
+  // Location pages - High priority for local SEO
+  const locationPages: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/lokasi/bantul`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.95
+    },
+    {
+      url: `${baseUrl}/lokasi/sleman`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.95
+    },
+    {
+      url: `${baseUrl}/lokasi/solo`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.95
+    },
+    {
+      url: `${baseUrl}/lokasi/magelang`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9
+    },
+    {
+      url: `${baseUrl}/lokasi/klaten`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9
+    }
+  ]
+
   try {
     // Get all products
     const products = await productService.getAllProducts()
-    
+
     // Generate product pages
     const productPages: MetadataRoute.Sitemap = products.map(product => ({
       url: `${baseUrl}/product/${product.slug}`,
@@ -61,7 +95,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Get all blog posts
     const blogPosts = await blogService.getAllPosts()
-    
+
     // Generate blog post pages
     const blogPages: MetadataRoute.Sitemap = blogPosts.map(post => ({
       url: `${baseUrl}/blog/${post.slug}`,
@@ -72,6 +106,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [
       ...staticPages,
+      ...locationPages,
       ...productPages,
       ...tagPages,
       ...blogPages
