@@ -164,34 +164,49 @@ export async function createTestimonial(testimonial: Partial<Testimonial>): Prom
 }
 
 export async function updateTestimonial(id: string, updates: Partial<Testimonial>): Promise<Testimonial | null> {
-    const { data, error } = await supabase
-        .from('testimonials')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
+    try {
+        const response = await fetch(`/api/admin/testimonials/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updates),
+        });
 
-    if (error) {
+        if (!response.ok) {
+            const error = await response.json();
+            console.error('Error updating testimonial:', error);
+            return null;
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
         console.error('Error updating testimonial:', error);
         return null;
     }
-
-    return data;
 }
 
-export async function deleteTestimonial(id: string): Promise<boolean> {
-    const { error } = await supabase
-        .from('testimonials')
-        .delete()
-        .eq('id', id);
 
-    if (error) {
+export async function deleteTestimonial(id: string): Promise<boolean> {
+    try {
+        const response = await fetch(`/api/admin/testimonials/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            console.error('Error deleting testimonial:', error);
+            return false;
+        }
+
+        return true;
+    } catch (error) {
         console.error('Error deleting testimonial:', error);
         return false;
     }
-
-    return true;
 }
+
 
 // =====================================================
 // STATISTICS FUNCTIONS
