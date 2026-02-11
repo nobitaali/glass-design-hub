@@ -22,6 +22,16 @@ export async function DELETE(request: NextRequest) {
 
         console.log('Deleting file from storage:', filePath);
 
+        // Check if file exists before attempting to delete
+        const { data: fileList } = await supabase.storage
+            .from('testimonial-images')
+            .list('', { search: filePath });
+
+        if (!fileList || fileList.length === 0) {
+            console.log('File not found in storage:', filePath);
+            return NextResponse.json({ success: true, message: 'File not found but continuing' });
+        }
+
         const { error } = await supabase.storage
             .from('testimonial-images')
             .remove([filePath]);

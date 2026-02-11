@@ -306,6 +306,7 @@ export async function uploadTestimonialImage(
     const fileName = `${type}-${Date.now()}.${fileExt}`;
     const filePath = `${fileName}`;
 
+    // First try to upload with upsert: false to avoid overwriting
     const { error: uploadError } = await supabase.storage
         .from('testimonial-images')
         .upload(filePath, file, {
@@ -313,7 +314,21 @@ export async function uploadTestimonialImage(
             upsert: false
         });
 
-    if (uploadError) {
+    // If there's a duplicate error, try with upsert: true
+    if (uploadError && uploadError.message.includes('already exists')) {
+        console.log('File already exists, trying with upsert: true');
+        const { error: upsertError } = await supabase.storage
+            .from('testimonial-images')
+            .upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: true
+            });
+
+        if (upsertError) {
+            console.error('Error uploading image with upsert:', upsertError);
+            return null;
+        }
+    } else if (uploadError) {
         console.error('Error uploading image:', uploadError);
         return null;
     }

@@ -27,21 +27,26 @@ export async function PATCH(
             .from('testimonials')
             .update(updateData)
             .eq('id', params.id)
-            .select();
+            .select()
+            .single();
 
         console.log('Update result:', { data, error });
 
         if (error) {
             console.error('Error updating testimonial:', error);
+            // Handle specific PGRST116 error
+            if (error.code === 'PGRST116') {
+                return NextResponse.json({ error: 'Testimonial not found or no changes made' }, { status: 404 });
+            }
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
 
-        if (!data || data.length === 0) {
-            console.error('No rows returned after update');
-            return NextResponse.json({ error: 'No rows updated' }, { status: 404 });
+        if (!data) {
+            console.error('No data returned after update');
+            return NextResponse.json({ error: 'Testimonial not found or no changes made' }, { status: 404 });
         }
 
-        return NextResponse.json(data[0]);
+        return NextResponse.json(data);
     } catch (error) {
         console.error('Error in PATCH handler:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
