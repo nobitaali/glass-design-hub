@@ -226,7 +226,7 @@ export function generateTestimonialsPageMetadata(totalCount: number, averageRati
             googleBot: {
                 index: true,
                 follow: true,
-                'max-image-preview': 'large',
+                'max-image-preview': 'large' as const,
                 'max-snippet': -1,
             }
         },
