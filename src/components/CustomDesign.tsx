@@ -27,14 +27,14 @@ const CustomDesign = () => {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-br from-primary/5 to-secondary/5">
+    <section className="py-16 bg-gradient-to-br from-primary/5 to-secondary/5" id="layanan">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
             📦 Kustomisasi Desain Tersedia
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Kami menerima pemesanan desain khusus, potong sesuai ukuran, hingga pemasangan di lokasi. 
+            Kami menerima pemesanan desain khusus, potong sesuai ukuran, hingga pemasangan di lokasi.
             <strong className="text-primary">Pengiriman ke seluruh Indonesia dengan garansi kualitas terbaik.</strong>
             Wujudkan visi interior impian Anda bersama tim profesional kami.
           </p>
@@ -61,10 +61,10 @@ const CustomDesign = () => {
             Siap Memulai Proyek Anda?
           </h3>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Konsultasikan kebutuhan interior Anda dengan tim ahli kami. 
+            Konsultasikan kebutuhan interior Anda dengan tim ahli kami.
             Dapatkan penawaran terbaik dan solusi yang tepat untuk ruang impian Anda.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button size="lg" className="min-w-[200px]">
               Konsultasi Gratis Sekarang
@@ -73,7 +73,7 @@ const CustomDesign = () => {
               Request Penawaran
             </Button>
           </div>
-          
+
           <div className="mt-8 pt-8 border-t border-border">
             <p className="text-sm text-muted-foreground">
               📞 Hubungi kami: 0851-5627-5565 | 📧 jayastiker25@gmail.com

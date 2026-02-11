@@ -8,6 +8,7 @@ Crawl-delay: 1
 # Directories to exclude
 Disallow: /api/
 Disallow: /admin/
+Disallow: /login/
 
 # Specific file exclusions
 Disallow: /404

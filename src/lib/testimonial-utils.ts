@@ -182,14 +182,80 @@ export function generateTestimonialMetadata(testimonial: Testimonial) {
 }
 
 export function generateTestimonialsPageMetadata(totalCount: number, averageRating: number) {
+    const baseUrl = 'https://www.jayasticker.id';
+
+    // Enhanced keywords with location-specific and service-specific terms
+    const keywords = [
+        // Core testimonial keywords
+        'testimoni kaca film jogja',
+        'review sandblast yogyakarta',
+        'testimoni pelanggan jaya sticker',
+
+        // Location-specific
+        'testimoni kaca film bantul',
+        'review sandblast sleman',
+        'testimoni stiker solo',
+        'testimoni kaca film magelang',
+        'review sandblast klaten',
+
+        // Service-specific
+        'testimoni kaca film mobil',
+        'review sandblast kaca',
+        'testimoni stiker dekoratif',
+
+        // Quality/trust indicators
+        'pelanggan puas kaca film',
+        'review terpercaya sandblast',
+        'testimoni profesional jogja'
+    ].join(', ');
+
     return {
-        title: `${totalCount}+ Testimoni Pelanggan Puas | Jaya Sticker Custom`,
-        description: `Baca ${totalCount}+ testimoni pelanggan kami dengan rating rata-rata ${averageRating}/5. Kualitas terpercaya untuk kaca film, sandblast, dan stiker dekoratif di Yogyakarta.`,
-        keywords: 'testimoni kaca film, review sandblast, testimoni pelanggan, kaca film jogja review, sandblast yogyakarta testimoni',
+        title: `${totalCount}+ Testimoni Pelanggan Puas | Kaca Film & Sandblast Jogja`,
+        description: `Baca ${totalCount}+ testimoni pelanggan kami dengan rating rata-rata ${averageRating}/5. Kualitas terpercaya untuk kaca film, sandblast, dan stiker dekoratif di Yogyakarta, Bantul, Sleman, Solo.`,
+        keywords,
+
+        // Canonical URL
+        alternates: {
+            canonical: `${baseUrl}/testimonials`
+        },
+
+        // Robots meta
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            }
+        },
+
+        // Enhanced OpenGraph
         openGraph: {
+            title: `${totalCount}+ Testimoni Pelanggan Puas - Jaya Sticker`,
+            description: `Rating ${averageRating}/5 dari ${totalCount}+ pelanggan. Layanan kaca film & sandblast terpercaya di Yogyakarta!`,
+            url: `${baseUrl}/testimonials`,
+            siteName: 'Jaya Sticker Custom',
+            locale: 'id_ID',
+            type: 'website',
+            images: [
+                {
+                    url: `${baseUrl}/og-image.jpg`,
+                    width: 1200,
+                    height: 630,
+                    alt: 'Testimoni Pelanggan Jaya Sticker'
+                }
+            ]
+        },
+
+        // Twitter Card
+        twitter: {
+            card: 'summary_large_image',
             title: `${totalCount}+ Testimoni Pelanggan Puas`,
-            description: `Rating ${averageRating}/5 dari ${totalCount}+ pelanggan. Kualitas terpercaya!`,
-            type: 'website'
+            description: `Rating ${averageRating}/5 - Kaca Film & Sandblast Terpercaya`,
+            images: [`${baseUrl}/og-image.jpg`]
         }
     };
 }
+
