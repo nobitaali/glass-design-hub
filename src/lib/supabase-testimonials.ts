@@ -148,7 +148,57 @@ export async function getTestimonialsByRating(minRating: number): Promise<Testim
 // ADMIN FUNCTIONS (Requires Authentication)
 // =====================================================
 
-export async function createTestimonial(testimonial: Partial<Testimonial>): Promise<Testimonial | null> {
+// =====================================================
+// ADMIN SPECIFIC FUNCTIONS (NO-CACHE)
+// =====================================================
+
+export async function getTestimonialByIdAdmin(id: string): Promise<Testimonial | null> {
+    // Create a fresh client with no-store fetch to bypass Next.js cache
+    const adminClient = createClient(supabaseUrl, supabaseAnonKey, {
+        global: {
+            fetch: (url, options) => fetch(url, { ...options, cache: 'no-store' }),
+        },
+    });
+
+    const { data, error } = await adminClient
+        .from('testimonials')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+    if (error) {
+        console.error('Error fetching testimonial (admin):', error);
+        return null;
+    }
+
+    return data;
+}
+
+export async function getAllTestimonialsAdmin(): Promise<Testimonial[]> {
+    const adminClient = createClient(supabaseUrl, supabaseAnonKey, {
+        global: {
+            fetch: (url, options) => fetch(url, { ...options, cache: 'no-store' }),
+        },
+    });
+
+    const { data, error } = await adminClient
+        .from('testimonials')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching testimonials (admin):', error);
+        return [];
+    }
+
+    return data || [];
+}
+
+// =====================================================
+// PUBLIC FUNCTIONS
+// =====================================================
+
+export async function createTestimonial(testimonial: Omit<Testimonial, 'id' | 'created_at' | 'updated_at' | 'views' | 'helpful_count'>): Promise<Testimonial | null> {
     const { data, error } = await supabase
         .from('testimonials')
         .insert([testimonial])
@@ -276,20 +326,26 @@ export async function uploadTestimonialImage(
 }
 
 export async function deleteTestimonialImage(imageUrl: string): Promise<boolean> {
-    // Extract file path from URL
-    const urlParts = imageUrl.split('/');
-    const filePath = urlParts[urlParts.length - 1];
+    try {
+        const response = await fetch('/api/admin/testimonials/delete-image', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageUrl }),
+        });
 
-    const { error } = await supabase.storage
-        .from('testimonial-images')
-        .remove([filePath]);
+        if (!response.ok) {
+            const error = await response.json();
+            console.error('Error deleting image:', error);
+            return false;
+        }
 
-    if (error) {
+        return true;
+    } catch (error) {
         console.error('Error deleting image:', error);
         return false;
     }
-
-    return true;
 }
 
 // =====================================================

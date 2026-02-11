@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Testimonial, createTestimonial, updateTestimonial, uploadTestimonialImage } from "@/lib/supabase-testimonials";
+import { Testimonial, createTestimonial, updateTestimonial, uploadTestimonialImage, deleteTestimonialImage } from "@/lib/supabase-testimonials";
 import { validateTestimonial } from "@/lib/testimonial-utils";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -53,6 +53,12 @@ export default function TestimonialForm({ testimonial, mode }: TestimonialFormPr
     const handleImageUpload = async (file: File, type: 'project' | 'avatar') => {
         setLoading(true);
         try {
+            // Delete old image from storage if exists
+            const oldUrl = type === 'project' ? imageUrl : avatarUrl;
+            if (oldUrl) {
+                await deleteTestimonialImage(oldUrl);
+            }
+
             const url = await uploadTestimonialImage(file, type);
             if (url) {
                 if (type === 'project') {
@@ -70,6 +76,45 @@ export default function TestimonialForm({ testimonial, mode }: TestimonialFormPr
             setLoading(false);
         }
     };
+
+    const handleRemoveImage = async (type: 'project' | 'avatar') => {
+        console.log('handleRemoveImage called for type:', type);
+        const imageToRemove = type === 'project' ? imageUrl : avatarUrl;
+        console.log('Image to remove:', imageToRemove);
+
+        if (!imageToRemove) {
+            console.log('No image to remove, returning early');
+            return;
+        }
+
+        if (!confirm('Apakah Anda yakin ingin menghapus gambar ini?')) {
+            console.log('User cancelled image removal');
+            return;
+        }
+
+        console.log('Starting image removal...');
+        setLoading(true);
+        try {
+            const success = await deleteTestimonialImage(imageToRemove);
+            console.log('Delete result:', success);
+            if (success) {
+                if (type === 'project') {
+                    setImageUrl('');
+                } else {
+                    setAvatarUrl('');
+                }
+                console.log('Image state cleared successfully');
+            } else {
+                alert("Gagal menghapus gambar");
+            }
+        } catch (error) {
+            console.error("Error removing image:", error);
+            alert("Gagal menghapus gambar");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     const handleAddKeyword = () => {
         if (keywordInput.trim() && !formData.keywords.includes(keywordInput.trim())) {
@@ -116,6 +161,8 @@ export default function TestimonialForm({ testimonial, mode }: TestimonialFormPr
             }
 
             if (result) {
+                // Force refresh to clear cache and revalidate data
+                router.refresh();
                 router.push("/admin/testimonials");
             } else {
                 alert(`Gagal ${mode === "create" ? "membuat" : "mengupdate"} testimoni`);
@@ -221,7 +268,7 @@ export default function TestimonialForm({ testimonial, mode }: TestimonialFormPr
                                                 variant="destructive"
                                                 size="sm"
                                                 className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
-                                                onClick={() => setAvatarUrl("")}
+                                                onClick={() => handleRemoveImage('avatar')}
                                             >
                                                 <X className="h-4 w-4" />
                                             </Button>
@@ -271,8 +318,8 @@ export default function TestimonialForm({ testimonial, mode }: TestimonialFormPr
                                         >
                                             <Star
                                                 className={`h-8 w-8 ${star <= formData.rating
-                                                        ? "fill-yellow-400 text-yellow-400"
-                                                        : "text-gray-300"
+                                                    ? "fill-yellow-400 text-yellow-400"
+                                                    : "text-gray-300"
                                                     }`}
                                             />
                                         </button>
@@ -329,7 +376,7 @@ export default function TestimonialForm({ testimonial, mode }: TestimonialFormPr
                                                 variant="destructive"
                                                 size="sm"
                                                 className="absolute top-2 right-2"
-                                                onClick={() => setImageUrl("")}
+                                                onClick={() => handleRemoveImage('project')}
                                             >
                                                 <X className="h-4 w-4 mr-1" />
                                                 Hapus

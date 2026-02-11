@@ -13,19 +13,35 @@ export async function PATCH(
     try {
         const updates = await request.json();
 
+        console.log('PATCH request received for ID:', params.id);
+        console.log('Updates:', updates);
+
+        // Add updated_at timestamp
+        const updateData = {
+            ...updates,
+            updated_at: new Date().toISOString(),
+        };
+
+        console.log('Attempting update with Service Role Key...');
         const { data, error } = await supabase
             .from('testimonials')
-            .update(updates)
+            .update(updateData)
             .eq('id', params.id)
-            .select()
-            .single();
+            .select();
+
+        console.log('Update result:', { data, error });
 
         if (error) {
             console.error('Error updating testimonial:', error);
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
 
-        return NextResponse.json(data);
+        if (!data || data.length === 0) {
+            console.error('No rows returned after update');
+            return NextResponse.json({ error: 'No rows updated' }, { status: 404 });
+        }
+
+        return NextResponse.json(data[0]);
     } catch (error) {
         console.error('Error in PATCH handler:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

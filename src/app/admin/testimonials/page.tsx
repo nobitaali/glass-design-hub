@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
-import { Testimonial, getAllTestimonials, deleteTestimonial } from "@/lib/supabase-testimonials";
+import { Testimonial, getAllTestimonials, deleteTestimonial, getAllTestimonialsAdmin } from "@/lib/supabase-testimonials";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -66,15 +66,10 @@ export default function TestimonialsManagementPage() {
 
     const loadData = async () => {
         try {
-            // Get all testimonials (admin view, including unpublished)
-            const supabase = createClient();
-            const { data, error } = await supabase
-                .from('testimonials')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
-            setTestimonials(data || []);
+            setLoading(true);
+            const data = await getAllTestimonialsAdmin();
+            setTestimonials(data);
+            setFilteredTestimonials(data);
         } catch (error) {
             console.error("Error loading testimonials:", error);
         } finally {
