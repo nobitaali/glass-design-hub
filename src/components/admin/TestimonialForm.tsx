@@ -161,6 +161,34 @@ export default function TestimonialForm({ testimonial, mode }: TestimonialFormPr
             }
 
             if (result) {
+                // Revalidate the testimonials page to clear ISR cache
+                try {
+                    await fetch('/api/revalidate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ path: '/testimonials' }),
+                    });
+                } catch (error) {
+                    console.error('Error revalidating:', error);
+                }
+
+                // Also revalidate homepage if testimonial is featured
+                if (formData.featured) {
+                    try {
+                        await fetch('/api/revalidate', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ path: '/' }),
+                        });
+                    } catch (error) {
+                        console.error('Error revalidating homepage:', error);
+                    }
+                }
+
                 // Force refresh to clear cache and revalidate data
                 router.refresh();
                 router.push("/admin/testimonials");

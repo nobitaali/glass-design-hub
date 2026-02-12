@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -46,6 +47,10 @@ export async function PATCH(
             return NextResponse.json({ error: 'Testimonial not found or no changes made' }, { status: 404 });
         }
 
+        // Revalidate testimonials page and homepage
+        revalidatePath('/testimonials');
+        revalidatePath('/');
+
         return NextResponse.json(data);
     } catch (error) {
         console.error('Error in PATCH handler:', error);
@@ -67,6 +72,10 @@ export async function DELETE(
             console.error('Error deleting testimonial:', error);
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
+
+        // Revalidate testimonials page and homepage
+        revalidatePath('/testimonials');
+        revalidatePath('/');
 
         return NextResponse.json({ success: true });
     } catch (error) {
