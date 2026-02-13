@@ -3,8 +3,19 @@ import { unstable_cache } from 'next/cache'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+// Admin client with service role key (bypasses RLS)
+const getAdminClient = () => {
+  if (typeof window !== 'undefined') {
+    // Client-side: use anon key
+    return supabase;
+  }
+  // Server-side: use service role key to bypass RLS
+  return createClient(supabaseUrl, supabaseServiceRoleKey);
+}
 
 // Lightweight product interface for client-side (only essential data)
 export interface ProductSummary {
@@ -273,9 +284,11 @@ export const productService = {
   },
 
   // Admin functions - full data access (no cache for mutations)
+  // Uses Service Role Key to bypass RLS
   async createProduct(product: Omit<Product, 'id' | 'created_at' | 'updated_at'>): Promise<Product | null> {
     try {
-      const { data, error } = await supabase
+      const adminClient = getAdminClient();
+      const { data, error } = await adminClient
         .from('products')
         .insert([product])
         .select()
@@ -295,7 +308,8 @@ export const productService = {
 
   async updateProduct(id: string, updates: Partial<Product>): Promise<Product | null> {
     try {
-      const { data, error } = await supabase
+      const adminClient = getAdminClient();
+      const { data, error } = await adminClient
         .from('products')
         .update(updates)
         .eq('id', id)
@@ -316,7 +330,8 @@ export const productService = {
 
   async deleteProduct(id: string): Promise<boolean> {
     try {
-      const { error } = await supabase
+      const adminClient = getAdminClient();
+      const { error } = await adminClient
         .from('products')
         .delete()
         .eq('id', id);
@@ -329,6 +344,125 @@ export const productService = {
       return true;
     } catch (error) {
       console.error('Network error deleting product:', error);
+      return false;
+    }
+  },
+
+  // Admin-specific functions (no-cache for fresh data)
+  async getProductByIdAdmin(id: string): Promise<Product | null> {
+    // Create a fresh client with no-store fetch to bypass Next.js cache
+    const adminClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        fetch: (url, options) => fetch(url, { ...options, cache: 'no-store' }),
+      },
+    });
+
+    try {
+      const { data, error } = await adminClient
+        .from('products')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching product (admin):', error);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Network error fetching product (admin):', error);
+      return null;
+    }
+  },
+
+  async getAllProductsAdmin(): Promise<Product[]> {
+    const adminClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: {
+        fetch: (url, options) => fetch(url, { ...options, cache: 'no-store' }),
+      },
+    });
+
+    try {
+      const { data, error } = await adminClient
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching products (admin):', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Network error fetching products (admin):', error);
+      return [];
+    }
+  },
+
+  // Image upload functions
+  async uploadProductImage(
+    file: File,
+    type: 'main' | 'additional'
+  ): Promise<string | null> {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${type}-${Date.now()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    // First try to upload with upsert: false to avoid overwriting
+    const { error: uploadError } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    // If there's a duplicate error, try with upsert: true
+    if (uploadError && uploadError.message.includes('already exists')) {
+      console.log('File already exists, trying with upsert: true');
+      const { error: upsertError } = await supabase.storage
+        .from('product-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (upsertError) {
+        console.error('Error uploading image with upsert:', upsertError);
+        return null;
+      }
+    } else if (uploadError) {
+      console.error('Error uploading image:', uploadError);
+      return null;
+    }
+
+    const { data } = supabase.storage
+      .from('product-images')
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  },
+
+  async deleteProductImage(imageUrl: string): Promise<boolean> {
+    try {
+      // Extract file path from URL
+      const url = new URL(imageUrl);
+      const pathParts = url.pathname.split('/');
+      const filePath = pathParts[pathParts.length - 1];
+
+      const { error } = await supabase.storage
+        .from('product-images')
+        .remove([filePath]);
+
+      if (error) {
+        console.error('Error deleting product image:', error);
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error deleting product image:', error);
       return false;
     }
   }
